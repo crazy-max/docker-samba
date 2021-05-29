@@ -44,7 +44,7 @@ jobs:
         name: Start container
         run: |
           docker rm -f ${{ steps.prep.outputs.container_name }} > /dev/null 2>&1 || true
-          docker run -d -v "./.github/config-test.yml:/data/config.yml" --name ${{ steps.prep.outputs.container_name }} ${{ steps.prep.outputs.build_tag }}
+          docker run -d -v "$(pwd)/.github/config-test.yml:/data/config.yml:ro" --name ${{ steps.prep.outputs.container_name }} ${{ steps.prep.outputs.build_tag }}
       -
         name: Test run
         run: |
