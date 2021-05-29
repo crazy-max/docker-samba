@@ -30,6 +30,6 @@ share:
     browsable: yes
     readonly: no
     guestok: no
-    validusers: no
-    writelist: no
+    validusers: foo
+    writelist: foo
     veto: no

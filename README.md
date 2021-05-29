@@ -35,6 +35,7 @@ ___
 
 * Multi-platform image
 * Easy [configuration](#configuration) through YAML
+* Improve [operability with Mac OS X clients](https://wiki.samba.org/index.php/Configure_Samba_to_Work_Better_with_Mac_OS_X)
 
 ## Build locally
 
