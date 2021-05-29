@@ -1,0 +1,19 @@
+version: "3.5"
+
+services:
+  samba:
+    image: crazymax/samba
+    container_name: samba
+    ports:
+      - target: 139
+        published: 139
+        protocol: tcp
+      - target: 445
+        published: 445
+        protocol: tcp
+    volumes:
+      - "./data:/data"
+    environment:
+      - "TZ=Europe/Paris"
+      - "SAMBA_LOG_LEVEL=0"
+    restart: always

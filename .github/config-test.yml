@@ -1,0 +1,38 @@
+auth:
+  - user: foo
+    group: foo
+    uid: 1000
+    gid: 1000
+    password: bar
+  - user: yyy
+    group: xxx
+    uid: 1100
+    gid: 1200
+    password: zzz
+
+share:
+  - name: public
+    comment: Public
+    path: /samba/public
+    browsable: yes
+    readonly: yes
+    guestok: yes
+    validusers: ""
+    adminusers: ""
+    writelist: ""
+    veto: no
+  - name: share
+    path: /samba/share
+    browsable: yes
+    readonly: no
+    guestok: yes
+    writelist: foo
+    veto: no
+  - name: foo
+    path: /samba/foo
+    browsable: yes
+    readonly: no
+    guestok: no
+    validusers: no
+    writelist: no
+    veto: no
