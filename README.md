@@ -146,7 +146,9 @@ docker-compose logs -f
 You can also use the following minimal command:
 
 ```shell
-docker run -d -p 139:139 -p 445:445 --name samba crazymax/samba
+docker run -d --network host \
+  -v "$(pwd)/data:/data" \
+  --name samba crazymax/samba
 ```
 
 ## Upgrade
