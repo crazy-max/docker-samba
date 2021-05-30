@@ -22,6 +22,7 @@ ___
 * [Build locally](#build-locally)
 * [Image](#image)
 * [Environment variables](#environment-variables)
+* [Volumes](#volumes)
 * [Ports](#ports)
 * [Configuration](#configuration)
 * [Usage](#usage)
@@ -88,6 +89,10 @@ Image: crazymax/samba:latest
 * `SAMBA_INTERFACES`: Allows you to override the default network interfaces list.
 
 > More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
+
+## Volumes
+
+* `/data`: Contains cache, configuration and runtime data
 
 ## Ports
 
