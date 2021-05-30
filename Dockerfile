@@ -1,5 +1,4 @@
 ARG SAMBA_VERSION=4.13.8
-ARG SAMBA_RELEASE=r0
 
 FROM alpine:3.13
 LABEL maintainer="CrazyMax"
@@ -12,7 +11,7 @@ RUN apk --update --no-cache add \
     bash \
     coreutils \
     jq \
-    samba=${SAMBA_VERSION}-${SAMBA_RELEASE} \
+    samba=${SAMBA_VERSION}-r0 \
     shadow \
     tzdata \
     yq \
