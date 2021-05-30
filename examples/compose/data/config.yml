@@ -10,6 +10,10 @@ auth:
     gid: 1200
     password: zzz
 
+global:
+  - "force user = foo"
+  - "force group = foo"
+
 share:
   - name: public
     comment: Public
