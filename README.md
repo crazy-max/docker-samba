@@ -102,8 +102,8 @@ Image: crazymax/samba:latest
 
 ## Configuration
 
-Before using this image you have to create the YAML configuration file `/data/config.yml` to be able to create users
-and shares. Here is an example:
+Before using this image you have to create the YAML configuration file `/data/config.yml` to be able to create users,
+provide global options and add shares. Here is an example:
 
 ```yaml
 auth:
@@ -112,6 +112,10 @@ auth:
     uid: 1000
     gid: 1000
     password: bar
+
+global:
+  - "force user = foo"
+  - "force group = foo"
 
 share:
   - name: foo
