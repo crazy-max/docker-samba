@@ -7,8 +7,8 @@ SAMBA_SERVER_STRING=${SAMBA_SERVER_STRING:-Docker Samba Server}
 SAMBA_LOG_LEVEL=${SAMBA_LOG_LEVEL:-0}
 SAMBA_FOLLOW_SYMLINKS=${SAMBA_FOLLOW_SYMLINKS:-yes}
 SAMBA_WIDE_LINKS=${SAMBA_WIDE_LINKS:-yes}
-SAMBA_SERVER_MIN_PROTOCOL=${SAMBA_SERVER_MIN_PROTOCOL:-SMB2}
-SAMBA_SERVER_MAX_PROTOCOL=${SAMBA_SERVER_MAX_PROTOCOL:-SMB3}
+SAMBA_HOSTS_ALLOW=${SAMBA_HOSTS_ALLOW:-127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16}
+#SAMBA_INTERFACES=${SAMBA_INTERFACES:-eth0}
 
 echo "Setting timezone to ${TZ}"
 ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime
@@ -29,17 +29,23 @@ echo "Setting global configuration"
 workgroup = ${SAMBA_WORKGROUP}
 server string = ${SAMBA_SERVER_STRING}
 server role = standalone server
+server services = -dns, -nbt
 
 log level = ${SAMBA_LOG_LEVEL}
 ;log file = /usr/local/samba/var/log.%m
 ;max log size = 50
 
-hosts allow = 127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+hosts allow = ${SAMBA_HOSTS_ALLOW}
+hosts deny = 0.0.0.0/0
+interfaces = ${SAMBA_INTERFACES}
+bind interfaces only = yes
+
 security = user
 guest account = nobody
 pam password change = yes
 map to guest = bad user
 usershare allow guests = yes
+encrypt passwords = yes
 
 create mask = 0664
 force create mode = 0664
@@ -52,13 +58,15 @@ unix extensions = no
 printing = bsd
 printcap name = /dev/null
 disable spoolss = yes
+disable netbios = yes
+smb ports = 445
 
 client ipc min protocol = default
 client min protocol = CORE
-server min protocol = ${SAMBA_SERVER_MIN_PROTOCOL}
+server min protocol = SMB2
 client ipc max protocol = default
 client max protocol = default
-server max protocol = ${SAMBA_SERVER_MAX_PROTOCOL}
+server max protocol = SMB3
 
 ;wins support = yes
 ;wins server = w.x.y.z
@@ -75,19 +83,7 @@ fruit:posix_rename = yes
 fruit:veto_appledouble = no
 fruit:wipe_intentionally_left_blank_rfork = yes
 fruit:delete_empty_adfiles = yes
-
-;realm = MY_REALM
-;passdb backend = tdbsam
-;include = /usr/local/samba/lib/smb.conf.%m
-;interfaces = 192.168.12.2/24 192.168.13.2/24
-;logon path = \\%L\Profiles\%U
-
-;add user script = /usr/sbin/useradd %u
-;add group script = /usr/sbin/groupadd %g
-;add machine script = /usr/sbin/adduser -n -g machines -c Machine -d /dev/null -s /bin/false %u
-;delete user script = /usr/sbin/userdel %u
-;delete user from group script = /usr/sbin/deluser %u %g
-;delete group script = /usr/sbin/groupdel %g
+fruit:time machine = yes
 
 EOL
 

@@ -4,13 +4,7 @@ services:
   samba:
     image: crazymax/samba
     container_name: samba
-    ports:
-      - target: 139
-        published: 139
-        protocol: tcp
-      - target: 445
-        published: 445
-        protocol: tcp
+    network_mode: host
     volumes:
       - "./data:/data"
     environment:

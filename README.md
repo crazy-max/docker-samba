@@ -27,6 +27,8 @@ ___
 * [Usage](#usage)
   * [Docker Compose](#docker-compose)
   * [Command line](#command-line)
+* [Notes](#notes)
+  * [Status](#status)
 * [Upgrade](#upgrade)
 * [How can I help?](#how-can-i-help)
 * [License](#license)
@@ -36,6 +38,7 @@ ___
 * Multi-platform image
 * Easy [configuration](#configuration) through YAML
 * Improve [operability with Mac OS X clients](https://wiki.samba.org/index.php/Configure_Samba_to_Work_Better_with_Mac_OS_X)
+* Drop support for legacy protocols including NetBIOS, WINS, and Samba port 139
 
 ## Build locally
 
@@ -81,14 +84,13 @@ Image: crazymax/samba:latest
 * `SAMBA_LOG_LEVEL`: [Log level](https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#LOGLEVEL). (default `0`)
 * `SAMBA_FOLLOW_SYMLINKS`: Allow to [follow symlinks](https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#FOLLOWSYMLINKS). (default `yes`)
 * `SAMBA_WIDE_LINKS`: Controls whether or not links in the UNIX file system may be followed by the server. (default `yes`)
-* `SAMBA_SERVER_MIN_PROTOCOL`: Controls the minimum protocol version that the server will allow the client to use. (default `SMB2`)
-* `SAMBA_SERVER_MAX_PROTOCOL`: Highest protocol level that will be supported by the server. (default `SMB3`)
+* `SAMBA_HOSTS_ALLOW`: Set of hosts which are permitted to access a service. (default `127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16`)
+* `SAMBA_INTERFACES`: Allows you to override the default network interfaces list.
 
 > More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
 
 ## Ports
 
-* `139`: NetBIOS Session port
 * `445`: SMB over TCP port
 
 > More info: https://wiki.samba.org/index.php/Samba_NT4_PDC_Port_Usage
@@ -125,6 +127,17 @@ Recreate the container whenever I push an update:
 ```bash
 docker-compose pull
 docker-compose up -d
+```
+
+## Notes
+
+### Status
+
+Use the following commands to check the logs and status:
+
+```shell
+docker-compose logs samba
+docker-compose exec samba smbstatus
 ```
 
 ## How can I help?

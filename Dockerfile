@@ -20,7 +20,7 @@ RUN apk --update --no-cache add \
 
 COPY entrypoint.sh /entrypoint.sh
 
-EXPOSE 139 445
+EXPOSE 445
 
 VOLUME [ "/data" ]
 
