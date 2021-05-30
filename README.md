@@ -102,7 +102,31 @@ Image: crazymax/samba:latest
 
 ## Configuration
 
-_TODO_
+Before using this image you have to create the YAML configuration file `/data/config.yml` to be able to create users
+and shares. Here is an example:
+
+```yaml
+auth:
+  - user: foo
+    group: foo
+    uid: 1000
+    gid: 1000
+    password: bar
+
+share:
+  - name: foo
+    path: /samba/foo
+    browsable: yes
+    readonly: no
+    guestok: no
+    validusers: foo
+    writelist: foo
+    veto: no
+```
+
+A more complete example is available [here](examples/compose/data/config.yml).
+
+### Add users
 
 ## Usage
 
