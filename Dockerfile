@@ -1,7 +1,6 @@
-ARG SAMBA_VERSION=4.13.8
+ARG SAMBA_VERSION=4.14.5
 
-FROM alpine:3.13
-LABEL maintainer="CrazyMax"
+FROM alpine:3.14
 
 ENV TZ="UTC"
 
