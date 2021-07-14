@@ -87,8 +87,8 @@ fruit:time machine = yes
 
 EOL
 
-if [[ "$(yq -j read /data/config.yml | jq '.auth')" != "null" ]]; then
-  for auth in $(yq -j read /data/config.yml | jq -r '.auth[] | @base64'); do
+if [[ "$(yq -j e /data/config.yml | jq '.auth')" != "null" ]]; then
+  for auth in $(yq -j e /data/config.yml | jq -r '.auth[] | @base64'); do
     _jq() {
       echo "${auth}" | base64 --decode | jq -r "${1}"
     }
@@ -99,8 +99,8 @@ if [[ "$(yq -j read /data/config.yml | jq '.auth')" != "null" ]]; then
   done
 fi
 
-if [[ "$(yq -j read /data/config.yml | jq '.global')" != "null" ]]; then
-  for global in $(yq -j read /data/config.yml | jq -r '.global[] | @base64'); do
+if [[ "$(yq -j e /data/config.yml | jq '.global')" != "null" ]]; then
+  for global in $(yq -j e /data/config.yml | jq -r '.global[] | @base64'); do
   echo "Add global option: $(echo "$global" | base64 --decode)"
   cat >> /etc/samba/smb.conf <<EOL
 $(echo "$global" | base64 --decode)
@@ -108,8 +108,8 @@ EOL
   done
 fi
 
-if [[ "$(yq -j read /data/config.yml | jq '.share')" != "null" ]]; then
-  for share in $(yq -j read /data/config.yml | jq -r '.share[] | @base64'); do
+if [[ "$(yq -j e /data/config.yml | jq '.share')" != "null" ]]; then
+  for share in $(yq -j e /data/config.yml | jq -r '.share[] | @base64'); do
     _jq() {
       echo "${share}" | base64 --decode | jq -r "${1}"
     }
