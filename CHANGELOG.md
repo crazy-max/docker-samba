@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.15.2-r0 (2020/12/17)
+
+* Samba 4.15.2 (#9)
+* Alpine Linux 3.15 (#9)
+* Add `password_file` field (#8)
+
 ## 4.14.8-r0 (2020/10/27)
 
 * Samba 4.14.8 (#7)
