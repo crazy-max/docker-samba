@@ -1,6 +1,6 @@
-ARG SAMBA_VERSION=4.14.8
+ARG SAMBA_VERSION=4.15.2
 
-FROM alpine:3.14
+FROM alpine:3.15
 
 ENV TZ="UTC"
 
@@ -23,7 +23,7 @@ EXPOSE 445
 VOLUME [ "/data" ]
 
 ENTRYPOINT [ "/entrypoint.sh" ]
-CMD [ "smbd", "-FS", "--no-process-group" ]
+CMD [ "smbd", "-F", "--debug-stdout", "--no-process-group" ]
 
 HEALTHCHECK --interval=30s --timeout=10s \
   CMD smbclient -L \\localhost -U % -m SMB3

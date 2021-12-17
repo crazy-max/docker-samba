@@ -30,6 +30,8 @@ workgroup = ${SAMBA_WORKGROUP}
 server string = ${SAMBA_SERVER_STRING}
 server role = standalone server
 server services = -dns, -nbt
+server signing = default
+server multi channel support = yes
 
 log level = ${SAMBA_LOG_LEVEL}
 ;log file = /usr/local/samba/var/log.%m
@@ -45,7 +47,6 @@ guest account = nobody
 pam password change = yes
 map to guest = bad user
 usershare allow guests = yes
-encrypt passwords = yes
 
 create mask = 0664
 force create mode = 0664
@@ -62,11 +63,7 @@ disable netbios = yes
 smb ports = 445
 
 client ipc min protocol = default
-client min protocol = CORE
-server min protocol = SMB2
 client ipc max protocol = default
-client max protocol = default
-server max protocol = SMB3
 
 ;wins support = yes
 ;wins server = w.x.y.z
@@ -75,6 +72,8 @@ dns proxy = no
 socket options = TCP_NODELAY
 strict locking = no
 local master = no
+
+winbind scan trusted domains = yes
 
 vfs objects = fruit streams_xattr
 fruit:metadata = stream
@@ -87,8 +86,8 @@ fruit:time machine = yes
 
 EOL
 
-if [[ "$(yq -j e /data/config.yml | jq '.auth')" != "null" ]]; then
-  for auth in $(yq -j e /data/config.yml | jq -r '.auth[] | @base64'); do
+if [[ "$(yq -j e /data/config.yml 2>/dev/null | jq '.auth')" != "null" ]]; then
+  for auth in $(yq -j e /data/config.yml 2>/dev/null | jq -r '.auth[] | @base64'); do
     _jq() {
       echo "${auth}" | base64 --decode | jq -r "${1}"
     }
@@ -104,8 +103,8 @@ if [[ "$(yq -j e /data/config.yml | jq '.auth')" != "null" ]]; then
   done
 fi
 
-if [[ "$(yq -j e /data/config.yml | jq '.global')" != "null" ]]; then
-  for global in $(yq -j e /data/config.yml | jq -r '.global[] | @base64'); do
+if [[ "$(yq -j e /data/config.yml 2>/dev/null | jq '.global')" != "null" ]]; then
+  for global in $(yq -j e /data/config.yml 2>/dev/null | jq -r '.global[] | @base64'); do
   echo "Add global option: $(echo "$global" | base64 --decode)"
   cat >> /etc/samba/smb.conf <<EOL
 $(echo "$global" | base64 --decode)
@@ -113,8 +112,8 @@ EOL
   done
 fi
 
-if [[ "$(yq -j e /data/config.yml | jq '.share')" != "null" ]]; then
-  for share in $(yq -j e /data/config.yml | jq -r '.share[] | @base64'); do
+if [[ "$(yq -j e /data/config.yml 2>/dev/null | jq '.share')" != "null" ]]; then
+  for share in $(yq -j e /data/config.yml 2>/dev/null | jq -r '.share[] | @base64'); do
     _jq() {
       echo "${share}" | base64 --decode | jq -r "${1}"
     }
