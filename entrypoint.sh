@@ -92,10 +92,15 @@ if [[ "$(yq -j e /data/config.yml | jq '.auth')" != "null" ]]; then
     _jq() {
       echo "${auth}" | base64 --decode | jq -r "${1}"
     }
+    password=$(_jq '.password')
+    if [[ -z "$password" ]] && [[ -f "$(_jq '.password_file')" ]]; then
+      password=$(cat "$(_jq '.password_file')")
+    fi
     echo "Creating user $(_jq '.user')/$(_jq '.group') ($(_jq '.uid'):$(_jq '.gid'))"
     id -g "$(_jq '.gid')" &>/dev/null || id -gn "$(_jq '.group')" &>/dev/null || addgroup -g "$(_jq '.gid')" -S "$(_jq '.group')"
     id -u "$(_jq '.uid')" &>/dev/null || id -un "$(_jq '.user')" &>/dev/null || adduser -u "$(_jq '.uid')" -G "$(_jq '.group')" "$(_jq '.user')" -SHD
-    echo -e "$(_jq '.password')\n$(_jq '.password')" | smbpasswd -a -s "$(_jq '.user')"
+    echo -e "$password\n$password" | smbpasswd -a -s "$(_jq '.user')"
+    unset password
   done
 fi
 

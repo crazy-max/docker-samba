@@ -8,7 +8,7 @@ auth:
     group: xxx
     uid: 1100
     gid: 1200
-    password: zzz
+    password_file: /tmp/yyy_password
 
 global:
   - "force user = foo"

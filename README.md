@@ -112,6 +112,11 @@ auth:
     uid: 1000
     gid: 1000
     password: bar
+  - user: baz
+    group: xxx
+    uid: 1100
+    gid: 1200
+    password_file: /run/secrets/baz_password
 
 global:
   - "force user = foo"
