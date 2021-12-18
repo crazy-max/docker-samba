@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.15.2-r1 (2020/12/18)
+
+* Fix `password_file` when password is unspecified (#10)
+
 ## 4.15.2-r0 (2020/12/17)
 
 * Samba 4.15.2 (#9)
