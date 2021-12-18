@@ -92,7 +92,7 @@ if [[ "$(yq -j e /data/config.yml 2>/dev/null | jq '.auth')" != "null" ]]; then
       echo "${auth}" | base64 --decode | jq -r "${1}"
     }
     password=$(_jq '.password')
-    if [[ -z "$password" ]] && [[ -f "$(_jq '.password_file')" ]]; then
+    if [[ "$password" = "null" ]] && [[ -f "$(_jq '.password_file')" ]]; then
       password=$(cat "$(_jq '.password_file')")
     fi
     echo "Creating user $(_jq '.user')/$(_jq '.group') ($(_jq '.uid'):$(_jq '.gid'))"
