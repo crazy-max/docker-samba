@@ -133,6 +133,15 @@ share:
     veto: no
 ```
 
+`veto: no` is a list of predefined files and directories that will not be
+visible or accessible:
+
+```
+/._*/.apdisk/.AppleDouble/.DS_Store/.TemporaryItems/.Trashes/desktop.ini/ehthumbs.db/Network Trash Folder/Temporary Items/Thumbs.db/
+```
+
+More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#VETOFILES
+
 A more complete example is available [here](examples/compose/data/config.yml).
 
 ### Add users
