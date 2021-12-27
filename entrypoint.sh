@@ -39,8 +39,6 @@ log level = ${SAMBA_LOG_LEVEL}
 
 hosts allow = ${SAMBA_HOSTS_ALLOW}
 hosts deny = 0.0.0.0/0
-interfaces = ${SAMBA_INTERFACES}
-bind interfaces only = yes
 
 security = user
 guest account = nobody
@@ -85,6 +83,14 @@ fruit:delete_empty_adfiles = yes
 fruit:time machine = yes
 
 EOL
+
+if [ -n "${SAMBA_INTERFACES}" ]; then
+  cat >> /etc/samba/smb.conf <<EOL
+interfaces = ${SAMBA_INTERFACES}
+bind interfaces only = yes
+
+EOL
+fi
 
 if [[ "$(yq -j e /data/config.yml 2>/dev/null | jq '.auth')" != "null" ]]; then
   for auth in $(yq -j e /data/config.yml 2>/dev/null | jq -r '.auth[] | @base64'); do
