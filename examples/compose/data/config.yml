@@ -37,3 +37,11 @@ share:
     validusers: foo
     writelist: foo
     veto: no
+  - name: foo-baz
+    path: /samba/foo-baz
+    browsable: yes
+    readonly: no
+    guestok: no
+    validusers: foo,baz
+    writelist: foo,baz
+    veto: no

@@ -7,6 +7,10 @@ services:
     network_mode: host
     volumes:
       - "./data:/data"
+      - "./public:/samba/public"
+      - "./share:/samba/share"
+      - "./foo:/samba/foo"
+      - "./foo-baz:/samba/foo-baz"
     environment:
       - "TZ=Europe/Paris"
       - "SAMBA_LOG_LEVEL=0"
