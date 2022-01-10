@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.15.2-r2 (2022/01/10)
+
+* Fix interfaces limitation (#15)
+* Update example (#16)
+
 ## 4.15.2-r1 (2020/12/18)
 
 * Fix `password_file` when password is unspecified (#10)
