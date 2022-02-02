@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.15.5-r0 (2022/02/02)
+
+* Samba 4.15.5 (#17)
+
 ## 4.15.2-r2 (2022/01/10)
 
 * Fix interfaces limitation (#15)
