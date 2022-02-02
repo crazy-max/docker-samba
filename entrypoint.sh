@@ -73,7 +73,7 @@ local master = no
 
 winbind scan trusted domains = yes
 
-vfs objects = fruit streams_xattr
+vfs objects = streams_xattr
 fruit:metadata = stream
 fruit:model = MacSamba
 fruit:posix_rename = yes
