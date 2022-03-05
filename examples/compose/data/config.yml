@@ -37,6 +37,7 @@ share:
     validusers: foo
     writelist: foo
     veto: no
+    hidefiles: /_*/
   - name: foo-baz
     path: /samba/foo-baz
     browsable: yes

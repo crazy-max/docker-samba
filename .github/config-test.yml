@@ -40,3 +40,4 @@ share:
     validusers: foo
     writelist: foo
     veto: no
+    hidefiles: /_*/
