@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.15.5-r1 (2022/03/14)
+
+* Add `hide files` Samba opt (#23)
+
 ## 4.15.5-r0 (2022/02/02)
 
 * Samba 4.15.5 (#17)
