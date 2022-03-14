@@ -165,6 +165,9 @@ if [[ "$(yq -j e /data/config.yml 2>/dev/null | jq '.share')" != "null" ]]; then
       echo "veto files = /._*/.apdisk/.AppleDouble/.DS_Store/.TemporaryItems/.Trashes/desktop.ini/ehthumbs.db/Network Trash Folder/Temporary Items/Thumbs.db/" >> /etc/samba/smb.conf
       echo "delete veto files = yes" >> /etc/samba/smb.conf
     fi
+    if [[ "$(_jq '.hidefiles')" != "null" ]] && [[ -n "$(_jq '.hidefiles')" ]]; then
+      echo "hide files = $(_jq '.hidefiles')" >> /etc/samba/smb.conf
+    fi
   done
 fi
 

@@ -131,6 +131,7 @@ share:
     validusers: foo
     writelist: foo
     veto: no
+    hidefiles: /_*/
 ```
 
 `veto: no` is a list of predefined files and directories that will not be
@@ -140,9 +141,18 @@ visible or accessible:
 /._*/.apdisk/.AppleDouble/.DS_Store/.TemporaryItems/.Trashes/desktop.ini/ehthumbs.db/Network Trash Folder/Temporary Items/Thumbs.db/
 ```
 
-More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#VETOFILES
+*More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#VETOFILES*
 
-A more complete example is available [here](examples/compose/data/config.yml).
+`hidefiles: /_*/` is a list of predefined files and directories that will not be visible, but are accessible:
+
+```
+/_*/
+```
+In this example, all files and directories beginning with an underscore (`_`) will be hidden.
+
+*More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#HIDEFILES*
+
+A more complete `config.yml` example is available [here](examples/compose/data/config.yml).
 
 ### Add users
 
