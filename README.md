@@ -159,9 +159,7 @@ visible or accessible:
 
 In this example, all files and directories beginning with an underscore (`_`) will be hidden.
 
-> More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#HIDEFILES*
-
-### Add users
+> More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#HIDEFILES
 
 ## Usage
 
