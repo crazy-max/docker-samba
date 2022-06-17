@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.15.7-r0 (2022/06/17)
+
+* Samba 4.15.5 (#34)
+* Alpine Linux 3.16
+
 ## 4.15.5-r1 (2022/03/14)
 
 * Add `hide files` Samba opt (#23)
