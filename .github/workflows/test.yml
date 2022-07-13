@@ -46,6 +46,7 @@ jobs:
           printf %s "zzz" > /tmp/baz_password
           docker rm -f ${{ steps.prep.outputs.container_name }} > /dev/null 2>&1 || true
           docker run -d --name ${{ steps.prep.outputs.container_name }} \
+            -e "BROWSABLE=yes" \
             -v "$(pwd)/.github/config-test.yml:/data/config.yml:ro" \
             -v "/tmp/baz_password:/tmp/baz_password:ro" \
             ${{ steps.prep.outputs.build_tag }}
@@ -71,6 +72,10 @@ jobs:
             exit 1
           fi
           echo
+      -
+        name: Dump smb.conf
+        run: |
+          docker exec -t ${{ steps.prep.outputs.container_name }} cat /etc/samba/smb.conf
       -
         name: Container logs
         if: always()
