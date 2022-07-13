@@ -31,6 +31,7 @@ ___
   * [Docker Compose](#docker-compose)
   * [Command line](#command-line)
 * [Notes](#notes)
+  * [Variable interpolation](#variable-interpolation)
   * [Status](#status)
 * [Upgrade](#upgrade)
 * [Contributing](#contributing)
@@ -194,6 +195,48 @@ docker-compose up -d
 ```
 
 ## Notes
+
+### Variable interpolation
+
+Values in a YAML file can be set by variables, and interpolated at runtime using
+a Bash-like syntax `${VARIABLE}`.
+
+Only `${VARIABLE}` syntax is supported. Default values can be defined inline
+using typical shell syntax `${VARIABLE-default}`. It evaluates to default only
+if `VARIABLE` is unset in the environment.
+
+Here is an example:
+
+```yaml
+auth:
+  - user: foo
+    group: foo
+    uid: 1000
+    gid: 1000
+    password: bar
+
+share:
+  - name: foo
+    path: /samba/foo
+    browsable: ${BROWSABLE-no}
+    readonly: no
+    guestok: no
+    validusers: foo
+    writelist: foo
+```
+
+```yaml
+services:
+  samba:
+    image: crazymax/samba
+    network_mode: host
+    volumes:
+      - "./data:/data"
+      - "./foo:/samba/foo"
+    environment:
+      - "BROWSABLE=yes"
+    restart: always
+```
 
 ### Status
 

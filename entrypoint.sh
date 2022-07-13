@@ -92,8 +92,8 @@ bind interfaces only = yes
 EOL
 fi
 
-if [[ "$(yq -j e /data/config.yml 2>/dev/null | jq '.auth')" != "null" ]]; then
-  for auth in $(yq -j e /data/config.yml 2>/dev/null | jq -r '.auth[] | @base64'); do
+if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' /data/config.yml 2>/dev/null | jq '.auth')" != "null" ]]; then
+  for auth in $(yq -j e '(.. | select(tag == "!!str")) |= envsubst' /data/config.yml 2>/dev/null | jq -r '.auth[] | @base64'); do
     _jq() {
       echo "${auth}" | base64 --decode | jq -r "${1}"
     }
@@ -109,8 +109,8 @@ if [[ "$(yq -j e /data/config.yml 2>/dev/null | jq '.auth')" != "null" ]]; then
   done
 fi
 
-if [[ "$(yq -j e /data/config.yml 2>/dev/null | jq '.global')" != "null" ]]; then
-  for global in $(yq -j e /data/config.yml 2>/dev/null | jq -r '.global[] | @base64'); do
+if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' /data/config.yml 2>/dev/null | jq '.global')" != "null" ]]; then
+  for global in $(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' /data/config.yml 2>/dev/null | jq -r '.global[] | @base64'); do
   echo "Add global option: $(echo "$global" | base64 --decode)"
   cat >> /etc/samba/smb.conf <<EOL
 $(echo "$global" | base64 --decode)
@@ -118,8 +118,8 @@ EOL
   done
 fi
 
-if [[ "$(yq -j e /data/config.yml 2>/dev/null | jq '.share')" != "null" ]]; then
-  for share in $(yq -j e /data/config.yml 2>/dev/null | jq -r '.share[] | @base64'); do
+if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' /data/config.yml 2>/dev/null | jq '.share')" != "null" ]]; then
+  for share in $(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' /data/config.yml 2>/dev/null | jq -r '.share[] | @base64'); do
     _jq() {
       echo "${share}" | base64 --decode | jq -r "${1}"
     }

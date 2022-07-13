@@ -18,7 +18,7 @@ share:
   - name: public
     comment: Public
     path: /samba/public
-    browsable: yes
+    browsable: ${BROWSABLE}
     readonly: yes
     guestok: yes
     validusers: ""
@@ -27,14 +27,14 @@ share:
     veto: no
   - name: share
     path: /samba/share
-    browsable: yes
+    browsable: ${BROWSABLE}
     readonly: no
     guestok: yes
     writelist: foo
     veto: no
   - name: foo
     path: /samba/foo
-    browsable: yes
+    browsable: ${BROWSABLE}
     readonly: no
     guestok: no
     validusers: foo
