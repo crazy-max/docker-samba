@@ -201,9 +201,8 @@ docker-compose up -d
 Values in a YAML file can be set by variables, and interpolated at runtime using
 a Bash-like syntax `${VARIABLE}`.
 
-Only `${VARIABLE}` syntax is supported. Default values can be defined inline
-using typical shell syntax `${VARIABLE-default}`. It evaluates to default only
-if `VARIABLE` is unset in the environment.
+Default values can be defined inline using typical shell syntax `${VARIABLE-default}`.
+It evaluates to default only if `VARIABLE` is unset in the environment.
 
 Here is an example:
 
