@@ -22,6 +22,7 @@ share:
     readonly: yes
     guestok: yes
     veto: no
+    recycle: yes
   - name: share
     path: /samba/share
     browsable: yes
