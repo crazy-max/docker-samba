@@ -27,6 +27,7 @@ ___
 * [Configuration](#configuration)
   * [`veto`](#veto)
   * [`hidefiles`](#hidefiles)
+  * [`recycle`](#recycle)
 * [Usage](#usage)
   * [Docker Compose](#docker-compose)
   * [Command line](#command-line)
@@ -135,6 +136,7 @@ share:
     writelist: foo
     veto: no
     hidefiles: /_*/
+    recycle: yes
 ```
 
 A more complete `config.yml` example is available [here](examples/compose/data/config.yml).
@@ -161,6 +163,13 @@ visible or accessible:
 In this example, all files and directories beginning with an underscore (`_`) will be hidden.
 
 > More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#HIDEFILES
+
+### `recycle`
+
+`recycle: yes` this option enables `vfs_recycle` module.
+The `vfs_recycle` intercepts file deletion requests and moves the affected files to a temporary repository rather than deleting them immediately. This gives the same effect as the Recycle Bin on Windows computers.
+
+> More info: https://www.samba.org/samba/docs/current/man-html/vfs_recycle.8.html
 
 ## Usage
 

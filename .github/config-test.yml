@@ -25,6 +25,7 @@ share:
     adminusers: ""
     writelist: ""
     veto: no
+    recycle: yes
   - name: share
     path: /samba/share
     browsable: ${BROWSABLE}
