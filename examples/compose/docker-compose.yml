@@ -4,7 +4,9 @@ services:
   samba:
     image: crazymax/samba
     container_name: samba
-    network_mode: host
+    ports:
+      - 139:139
+      - 445:445
     volumes:
       - "./data:/data"
       - "./public:/samba/public"
