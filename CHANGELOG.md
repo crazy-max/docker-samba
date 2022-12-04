@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.16.7-r0 (2022/12/04)
+
+* Samba 4.16.7 (#44)
+* Variable interpolation support (#37)
+* Add `recycle` function (#40)
+* Alpine Linux 3.17 (#44)
+
 ## 4.15.7-r0 (2022/06/17)
 
 * Samba 4.15.7 (#34)
