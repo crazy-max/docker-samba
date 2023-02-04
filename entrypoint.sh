@@ -16,12 +16,27 @@ echo ${TZ} > /etc/timezone
 
 echo "Initializing files and folders"
 mkdir -p /data/cache /data/lib
-if [ -z "$(ls -A /data/lib)" ]; then
-  cp -r /var/lib/samba/* /data/lib/
+
+# fixes regression keeping improper symlinks
+# https://github.com/crazy-max/docker-samba/issues/48
+if [ -L "/data/lib/lib" ]; then
+  rm -f /data/lib/lib
 fi
-rm -rf /var/lib/cache /var/lib/samba
-ln -sf /data/cache /var/cache/samba
-ln -sf /data/lib /var/lib/samba
+if [ -L "/data/cache/cache" ]; then
+  rm -f /data/cache/cache
+fi
+
+if [ ! -L /var/lib/samba ]; then
+  if [ -z "$(ls -A /data/lib)" ]; then
+    cp -r /var/lib/samba/* /data/lib/
+  fi
+  rm -rf /var/lib/samba
+  ln -sf /data/lib /var/lib/samba
+fi
+if [ ! -L /var/cache/samba ]; then
+  rm -rf /var/cache/samba
+  ln -sf /data/cache /var/cache/samba
+fi
 
 echo "Setting global configuration"
   cat > /etc/samba/smb.conf <<EOL
