@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.16.8-r1 (2023/02/04)
+
+* Fix incorrect symlinks in data folder (#49)
+
 ## 4.16.8-r0 (2022/12/21)
 
 * Samba 4.16.8 (#46)
