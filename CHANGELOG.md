@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.16.10-r0 (2023/05/01)
+
+* Samba 4.16.10 (#53)
+
 ## 4.16.8-r1 (2023/02/04)
 
 * Fix incorrect symlinks in data folder (#49)
