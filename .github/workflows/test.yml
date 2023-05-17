@@ -49,27 +49,12 @@ jobs:
             -v "/tmp/baz_password:/tmp/baz_password:ro" \
             ${{ env.BUILD_TAG }}
       -
-        name: Test run
-        run: |
-          TIMEOUT=$((SECONDS + ${{ env.RUNNING_TIMEOUT }}))
-          while read LOGLINE; do
-            echo ${LOGLINE}
-            if [[ ${LOGLINE} == *"${{ env.RUNNING_LOG_CHECK }}"* ]]; then
-              echo "🎉 Container up!"
-              break
-            fi
-            if [[ $SECONDS -gt ${TIMEOUT} ]]; then
-              >&2 echo "❌ Failed to run ${{ env.CONTAINER_NAME }} container"
-              exit 1
-            fi
-          done < <(docker logs -f ${{ env.CONTAINER_NAME }} 2>&1)
-
-          CONTAINER_STATUS=$(docker container inspect --format "{{.State.Status}}" ${{ env.CONTAINER_NAME }})
-          if [[ ${CONTAINER_STATUS} != "running" ]]; then
-            >&2 echo "❌ Container ${{ env.CONTAINER_NAME }} returned status '$CONTAINER_STATUS'"
-            exit 1
-          fi
-          echo
+        name: Check container logs
+        uses: crazy-max/.github/.github/actions/container-logs-check@container-logs-check
+        with:
+          container_name: ${{ env.CONTAINER_NAME }}
+          log_check: " started."
+          timeout: 120
       -
         name: Dump smb.conf
         run: |
