@@ -1,11 +1,10 @@
-ARG SAMBA_VERSION=4.16.10
+# syntax=docker/dockerfile:1
 
-FROM alpine:3.17
+ARG ALPINE_VERSION=3.18
+ARG SAMBA_VERSION=4.18.2
 
-ENV TZ="UTC"
-
+FROM alpine:${ALPINE_VERSION}
 ARG SAMBA_VERSION
-ARG SAMBA_RELEASE
 RUN apk --update --no-cache add \
     bash \
     coreutils \
@@ -17,6 +16,7 @@ RUN apk --update --no-cache add \
   && rm -rf /tmp/*
 
 COPY entrypoint.sh /entrypoint.sh
+ENV TZ=UTC
 
 EXPOSE 445
 
