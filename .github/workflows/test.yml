@@ -15,8 +15,6 @@ on:
 env:
   BUILD_TAG: test
   CONTAINER_NAME: samba
-  RUNNING_TIMEOUT: 120
-  RUNNING_LOG_CHECK: " started."
 
 jobs:
   test:
@@ -50,11 +48,11 @@ jobs:
             ${{ env.BUILD_TAG }}
       -
         name: Check container logs
-        uses: crazy-max/.github/.github/actions/container-logs-check@container-logs-check
+        uses: crazy-max/.github/.github/actions/container-logs-check@main
         with:
           container_name: ${{ env.CONTAINER_NAME }}
           log_check: " started."
-          timeout: 120
+          timeout: 20
       -
         name: Dump smb.conf
         run: |
