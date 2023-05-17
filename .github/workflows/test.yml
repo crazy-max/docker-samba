@@ -12,6 +12,12 @@ on:
     paths-ignore:
       - '**.md'
 
+env:
+  BUILD_TAG: test
+  CONTAINER_NAME: samba
+  RUNNING_TIMEOUT: 120
+  RUNNING_LOG_CHECK: " started."
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -19,14 +25,6 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Prepare
-        id: prep
-        run: |
-          echo ::set-output name=build_tag::test
-          echo ::set-output name=container_name::samba
-          echo ::set-output name=running_timeout::120
-          echo ::set-output name=running_log_check:: started.
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -39,46 +37,46 @@ jobs:
         with:
           targets: image-local
         env:
-          DEFAULT_TAG: ${{ steps.prep.outputs.build_tag }}
+          DEFAULT_TAG: ${{ env.BUILD_TAG }}
       -
         name: Start container
         run: |
           printf %s "zzz" > /tmp/baz_password
-          docker rm -f ${{ steps.prep.outputs.container_name }} > /dev/null 2>&1 || true
-          docker run -d --name ${{ steps.prep.outputs.container_name }} \
+          docker rm -f ${{ env.CONTAINER_NAME }} > /dev/null 2>&1 || true
+          docker run -d --name ${{ env.CONTAINER_NAME }} \
             -e "BROWSABLE=yes" \
             -v "$(pwd)/.github/config-test.yml:/data/config.yml:ro" \
             -v "/tmp/baz_password:/tmp/baz_password:ro" \
-            ${{ steps.prep.outputs.build_tag }}
+            ${{ env.BUILD_TAG }}
       -
         name: Test run
         run: |
-          TIMEOUT=$((SECONDS + ${{ steps.prep.outputs.running_timeout }}))
+          TIMEOUT=$((SECONDS + ${{ env.RUNNING_TIMEOUT }}))
           while read LOGLINE; do
             echo ${LOGLINE}
-            if [[ ${LOGLINE} == *"${{ steps.prep.outputs.running_log_check }}"* ]]; then
+            if [[ ${LOGLINE} == *"${{ env.RUNNING_LOG_CHECK }}"* ]]; then
               echo "🎉 Container up!"
               break
             fi
             if [[ $SECONDS -gt ${TIMEOUT} ]]; then
-              >&2 echo "❌ Failed to run ${{ steps.prep.outputs.container_name }} container"
+              >&2 echo "❌ Failed to run ${{ env.CONTAINER_NAME }} container"
               exit 1
             fi
-          done < <(docker logs -f ${{ steps.prep.outputs.container_name }} 2>&1)
+          done < <(docker logs -f ${{ env.CONTAINER_NAME }} 2>&1)
 
-          CONTAINER_STATUS=$(docker container inspect --format "{{.State.Status}}" ${{ steps.prep.outputs.container_name }})
+          CONTAINER_STATUS=$(docker container inspect --format "{{.State.Status}}" ${{ env.CONTAINER_NAME }})
           if [[ ${CONTAINER_STATUS} != "running" ]]; then
-            >&2 echo "❌ Container ${{ steps.prep.outputs.container_name }} returned status '$CONTAINER_STATUS'"
+            >&2 echo "❌ Container ${{ env.CONTAINER_NAME }} returned status '$CONTAINER_STATUS'"
             exit 1
           fi
           echo
       -
         name: Dump smb.conf
         run: |
-          docker exec -t ${{ steps.prep.outputs.container_name }} cat /etc/samba/smb.conf
+          docker exec -t ${{ env.CONTAINER_NAME }} cat /etc/samba/smb.conf
       -
         name: Container logs
         if: always()
         run: |
-          docker logs ${{ steps.prep.outputs.container_name }}
-          docker rm -f ${{ steps.prep.outputs.container_name }} > /dev/null 2>&1 || true
+          docker logs ${{ env.CONTAINER_NAME }}
+          docker rm -f ${{ env.CONTAINER_NAME }} > /dev/null 2>&1 || true
