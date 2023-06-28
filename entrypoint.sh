@@ -176,6 +176,18 @@ if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' /
     if [[ "$(_jq '.writelist')" != "null" ]] && [[ -n "$(_jq '.writelist')" ]]; then
       echo "write list = $(_jq '.writelist')" >> /etc/samba/smb.conf
     fi
+    if [[ "$(_jq '.createmask')" = "null" ]] || [[ -z "$(_jq '.createmask')" ]]; then
+      echo "create mask = $(_jq '.createmask')" >> /etc/samba/smb.conf
+    fi
+    if [[ "$(_jq '.directorymask')" = "null" ]] || [[ -z "$(_jq '.directorymask')" ]]; then
+      echo "directory mask = $(_jq '.directorymask')" >> /etc/samba/smb.conf
+    fi
+    if [[ "$(_jq '.forceuser')" = "null" ]] || [[ -z "$(_jq '.forceuser')" ]]; then
+      echo "force user = $(_jq '.forceuser')" >> /etc/samba/smb.conf
+    fi
+    if [[ "$(_jq '.writable')" = "null" ]] || [[ -z "$(_jq '.writable')" ]]; then
+      echo "writable = $(_jq '.writable')" >> /etc/samba/smb.conf
+    fi
     if [[ "$(_jq '.veto')" != "null" ]] && [[ "$(_jq '.veto')" = "no" ]]; then
       echo "veto files = /._*/.apdisk/.AppleDouble/.DS_Store/.TemporaryItems/.Trashes/desktop.ini/ehthumbs.db/Network Trash Folder/Temporary Items/Thumbs.db/" >> /etc/samba/smb.conf
       echo "delete veto files = yes" >> /etc/samba/smb.conf
