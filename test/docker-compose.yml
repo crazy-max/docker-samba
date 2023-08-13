@@ -1,0 +1,16 @@
+services:
+  samba:
+    image: ${SAMBA_IMAGE:-crazymax/samba}
+    container_name: ${SAMBA_CONTAINER:-samba}
+    network_mode: host
+    volumes:
+      - "./data:/data"
+      - "./public:/samba/public"
+      - "./share:/samba/share"
+      - "./foo:/samba/foo"
+      - "./foo-baz:/samba/foo-baz"
+      - "./yyy_password:/tmp/yyy_password:ro"
+    environment:
+      - "TZ=Europe/Paris"
+      - "BROWSABLE=yes"
+    restart: always
