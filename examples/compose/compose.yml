@@ -1,7 +1,9 @@
+name: samba
+
 services:
   samba:
-    image: ${SAMBA_IMAGE:-crazymax/samba}
-    container_name: ${SAMBA_CONTAINER:-samba}
+    image: crazymax/samba
+    container_name: samba
     network_mode: host
     volumes:
       - "./data:/data"
@@ -9,8 +11,7 @@ services:
       - "./share:/samba/share"
       - "./foo:/samba/foo"
       - "./foo-baz:/samba/foo-baz"
-      - "./yyy_password:/tmp/yyy_password:ro"
     environment:
       - "TZ=Europe/Paris"
-      - "BROWSABLE=yes"
+      - "SAMBA_LOG_LEVEL=0"
     restart: always
