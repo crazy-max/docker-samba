@@ -86,6 +86,7 @@ Image: crazymax/samba:latest
 ## Environment variables
 
 * `TZ`: Timezone assigned to the container (default `UTC`)
+* `CONFIG_FILE`: YAML configuration path (default `/data/config.yml`)
 * `SAMBA_WORKGROUP`: NT-Domain-Name or [Workgroup-Name](https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#WORKGROUP). (default `WORKGROUP`)
 * `SAMBA_SERVER_STRING`: [Server string](https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#SERVERSTRING) is the equivalent of the NT Description field. (default `Docker Samba Server`)
 * `SAMBA_LOG_LEVEL`: [Log level](https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#LOGLEVEL). (default `0`)
@@ -93,7 +94,6 @@ Image: crazymax/samba:latest
 * `SAMBA_WIDE_LINKS`: Controls whether or not links in the UNIX file system may be followed by the server. (default `yes`)
 * `SAMBA_HOSTS_ALLOW`: Set of hosts which are permitted to access a service. (default `127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16`)
 * `SAMBA_INTERFACES`: Allows you to override the default network interfaces list.
-* `CONFIG_FILE`: YAML configuration path (default `/data/config.yml`)
 
 > More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
 
@@ -109,8 +109,9 @@ Image: crazymax/samba:latest
 
 ## Configuration
 
-Before using this image you have to create the YAML configuration file `/data/config.yml` to be able to create users,
-provide global options and add shares. Here is an example:
+Before using this image you have to create the YAML configuration file
+`/data/config.yml` to be able to create users, provide global options and add
+shares. Here is an example:
 
 ```yaml
 auth:
