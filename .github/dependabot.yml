@@ -5,5 +5,5 @@ updates:
     schedule:
       interval: "daily"
     labels:
-      - ":game_die: dependencies"
-      - ":robot: bot"
+      - "kind/dependencies"
+      - "bot"
