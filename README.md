@@ -182,8 +182,8 @@ in `/var/samba/` on your host for example. Edit the compose and configuration fi
 following commands:
 
 ```bash
-docker-compose up -d
-docker-compose logs -f
+docker compose up -d
+docker compose logs -f
 ```
 
 ### Command line
@@ -201,8 +201,8 @@ docker run -d --network host \
 Recreate the container whenever I push an update:
 
 ```bash
-docker-compose pull
-docker-compose up -d
+docker compose pull
+docker compose up -d
 ```
 
 ## Notes
@@ -253,8 +253,8 @@ services:
 Use the following commands to check the logs and status:
 
 ```shell
-docker-compose logs samba
-docker-compose exec samba smbstatus
+docker compose logs samba
+docker compose exec samba smbstatus
 ```
 
 ## Contributing
