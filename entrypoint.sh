@@ -1,6 +1,6 @@
 #!/bin/bash
-
 TZ=${TZ:-UTC}
+CONFIG_FILE=${CONFIG_FILE:-/data/config.yml}
 
 SAMBA_WORKGROUP=${SAMBA_WORKGROUP:-WORKGROUP}
 SAMBA_SERVER_STRING=${SAMBA_SERVER_STRING:-Docker Samba Server}
@@ -107,8 +107,8 @@ bind interfaces only = yes
 EOL
 fi
 
-if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' /data/config.yml 2>/dev/null | jq '.auth')" != "null" ]]; then
-  for auth in $(yq -j e '(.. | select(tag == "!!str")) |= envsubst' /data/config.yml 2>/dev/null | jq -r '.auth[] | @base64'); do
+if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' $CONFIG_FILE 2>/dev/null | jq '.auth')" != "null" ]]; then
+  for auth in $(yq -j e '(.. | select(tag == "!!str")) |= envsubst' $CONFIG_FILE 2>/dev/null | jq -r '.auth[] | @base64'); do
     _jq() {
       echo "${auth}" | base64 --decode | jq -r "${1}"
     }
@@ -124,8 +124,8 @@ if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' /
   done
 fi
 
-if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' /data/config.yml 2>/dev/null | jq '.global')" != "null" ]]; then
-  for global in $(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' /data/config.yml 2>/dev/null | jq -r '.global[] | @base64'); do
+if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' $CONFIG_FILE 2>/dev/null | jq '.global')" != "null" ]]; then
+  for global in $(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' $CONFIG_FILE 2>/dev/null | jq -r '.global[] | @base64'); do
   echo "Add global option: $(echo "$global" | base64 --decode)"
   cat >> /etc/samba/smb.conf <<EOL
 $(echo "$global" | base64 --decode)
@@ -133,8 +133,8 @@ EOL
   done
 fi
 
-if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' /data/config.yml 2>/dev/null | jq '.share')" != "null" ]]; then
-  for share in $(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' /data/config.yml 2>/dev/null | jq -r '.share[] | @base64'); do
+if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' $CONFIG_FILE 2>/dev/null | jq '.share')" != "null" ]]; then
+  for share in $(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' $CONFIG_FILE 2>/dev/null | jq -r '.share[] | @base64'); do
     _jq() {
       echo "${share}" | base64 --decode | jq -r "${1}"
     }
