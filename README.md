@@ -93,6 +93,7 @@ Image: crazymax/samba:latest
 * `SAMBA_WIDE_LINKS`: Controls whether or not links in the UNIX file system may be followed by the server. (default `yes`)
 * `SAMBA_HOSTS_ALLOW`: Set of hosts which are permitted to access a service. (default `127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16`)
 * `SAMBA_INTERFACES`: Allows you to override the default network interfaces list.
+* `CONFIG_FILE`: YAML configuration path (default `/data/config.yml`)
 
 > More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
 
