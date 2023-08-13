@@ -36,6 +36,7 @@ ___
 * [Notes](#notes)
   * [Variable interpolation](#variable-interpolation)
   * [Status](#status)
+  * [Service discovery for Windows](#service-discovery-for-windows)
 * [Upgrade](#upgrade)
 * [Contributing](#contributing)
 * [License](#license)
@@ -46,6 +47,7 @@ ___
 * Easy [configuration](#configuration) through YAML
 * Improve [operability with Mac OS X clients](https://wiki.samba.org/index.php/Configure_Samba_to_Work_Better_with_Mac_OS_X)
 * Drop support for legacy protocols including NetBIOS, WINS, and Samba port 139
+* [Service discovery for Windows](#service-discovery-for-windows) supported using [WSDD2](https://github.com/Netgear/wsdd2)
 
 ## Build locally
 
@@ -94,6 +96,9 @@ Image: crazymax/samba:latest
 * `SAMBA_WIDE_LINKS`: Controls whether or not links in the UNIX file system may be followed by the server. (default `yes`)
 * `SAMBA_HOSTS_ALLOW`: Set of hosts which are permitted to access a service. (default `127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16`)
 * `SAMBA_INTERFACES`: Allows you to override the default network interfaces list.
+* `WSDD2_ENABLE`: Enable [service discovery for Windows](#service-discovery-for-windows) (default `0`)
+* `WSDD2_HOSTNAME`: Override hostname (default to host or container name)
+* `WSDD2_NETBIOS_NAME`: Set NetBIOS name (default to hostname)
 
 > More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
 
@@ -104,6 +109,8 @@ Image: crazymax/samba:latest
 ## Ports
 
 * `445`: SMB over TCP port
+* `3702`: WS-Discovery TCP/UDP port
+* `5355`: LLMNR TCP/UDP port
 
 > More info: https://wiki.samba.org/index.php/Samba_NT4_PDC_Port_Usage
 
@@ -258,6 +265,23 @@ Use the following commands to check the logs and status:
 docker compose logs samba
 docker compose exec samba smbstatus
 ```
+
+### Service discovery for Windows
+
+Service discovery for Windows can be enabled by setting `WSDD2_ENABLE` to `1`.
+
+You also need to set the following capabilities to the container:
+* `CAP_NET_ADMIN`
+* `CAP_NET_RAW`
+
+Name will be the `hostname` of the host if network mode is `host` or one of
+the container. If you want to override this value, you can set `hostname` in
+your compose file or set `WSDD2_HOSTNAME` env var.
+
+NetBIOS name will be the `hostname` of the host. If you want to override this
+value, you can set `WSDD2_NETBIOS_NAME` env var.
+
+See [examples/windows](examples/windows) as an example.
 
 ## Contributing
 
