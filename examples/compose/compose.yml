@@ -5,6 +5,10 @@ services:
     image: crazymax/samba
     container_name: samba
     network_mode: host
+    # set caps for service discovery for Windows when WSDD2_ENABLE=1
+#    cap_add:
+#      - CAP_NET_ADMIN
+#      - CAP_NET_RAW
     volumes:
       - "./data:/data"
       - "./public:/samba/public"
@@ -14,4 +18,6 @@ services:
     environment:
       - "TZ=Europe/Paris"
       - "SAMBA_LOG_LEVEL=0"
+      # remove comment to enable service discovery for Windows
+      #- "WSDD2_ENABLE=1"
     restart: always
