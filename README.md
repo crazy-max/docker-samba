@@ -99,6 +99,7 @@ Image: crazymax/samba:latest
 * `WSDD2_ENABLE`: Enable [service discovery for Windows](#service-discovery-for-windows) (default `0`)
 * `WSDD2_HOSTNAME`: Override hostname (default to host or container name)
 * `WSDD2_NETBIOS_NAME`: Set NetBIOS name (default to hostname)
+* `WSDD2_INTERFACE`: Reply only on this interface
 
 > More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
 
