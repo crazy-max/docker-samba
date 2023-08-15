@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.18.5-r2 (2023/08/15)
+
+* Opt to limit reply on a specific interface for wsdd2 service (#88)
+
 ## 4.18.5-r1 (2023/08/15)
 
 * Service discovery for Windows support (#86)
