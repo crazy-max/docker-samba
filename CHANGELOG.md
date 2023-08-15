@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.18.5-r1 (2023/08/15)
+
+* Service discovery for Windows support (#86)
+* Add `CONFIG_FILE` env var to set YAML config path (#68)
+* Switch to s6-overlay to start smbd (#85)
+
 ## 4.18.5-r0 (2023/08/13)
 
 * Samba 4.18.5 (#70)
