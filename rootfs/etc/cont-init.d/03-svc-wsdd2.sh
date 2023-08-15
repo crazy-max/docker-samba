@@ -5,6 +5,7 @@
 : "${WSDD2_ENABLE=0}"
 : "${WSDD2_HOSTNAME=}"
 : "${WSDD2_NETBIOS_NAME=}"
+: "${WSDD2_INTERFACE=}"
 
 if [ "$WSDD2_ENABLE" != "1" ]; then
   exit 0
@@ -18,6 +19,9 @@ if [ -n "${WSDD2_HOSTNAME}" ]; then
 fi
 if [ -n "${WSDD2_NETBIOS_NAME}" ]; then
   wsdd2Args="${wsdd2Args} -N ${WSDD2_NETBIOS_NAME}"
+fi
+if [ -n "${WSDD2_INTERFACE}" ]; then
+  wsdd2Args="${wsdd2Args} -i ${WSDD2_INTERFACE}"
 fi
 
 cat > /etc/services.d/wsdd2/run <<EOL
