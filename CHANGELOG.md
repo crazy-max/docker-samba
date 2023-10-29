@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.18.8-r0 (2023/10/29)
+
+* Samba 4.18.8 (#99)
+
 ## 4.18.5-r2 (2023/08/15)
 
 * Opt to limit reply on a specific interface for wsdd2 service (#88)
