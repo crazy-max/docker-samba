@@ -49,6 +49,7 @@ server role = standalone server
 server services = -dns, -nbt
 server signing = default
 server multi channel support = yes
+idmap config * : range = 5000-7999
 
 log level = ${SAMBA_LOG_LEVEL}
 ;log file = /usr/local/samba/var/log.%m
