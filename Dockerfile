@@ -1,17 +1,15 @@
 # syntax=docker/dockerfile:1
 
-ARG ALPINE_VERSION=3.19
+ARG ALPINE_VERSION=3.20
 ARG S6_VERSION=2.2.0.3
 
-ARG SAMBA_VERSION=4.18.9
+ARG SAMBA_VERSION=4.19.6
 ARG WSDD2_VERSION=e37443ac4c757dbf14167ec3f754ebe88244ad4b
 
 FROM --platform=${BUILDPLATFORM} crazymax/alpine-s6:${ALPINE_VERSION}-${S6_VERSION} AS wsdd2-src
-RUN apk --update --no-cache add git
 WORKDIR /src
-RUN git init . && git remote add origin "https://github.com/Netgear/wsdd2.git"
 ARG WSDD2_VERSION
-RUN git fetch origin "${WSDD2_VERSION}" && git checkout -q FETCH_HEAD
+ADD "https://github.com/Netgear/wsdd2.git#${WSDD2_VERSION}" .
 
 # TODO: do cross-compilation in this stage to build wsdd2
 FROM crazymax/alpine-s6:${ALPINE_VERSION}-${S6_VERSION} AS wsdd2

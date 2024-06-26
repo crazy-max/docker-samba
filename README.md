@@ -81,6 +81,7 @@ Image: crazymax/samba:latest
    - linux/arm64
    - linux/386
    - linux/ppc64le
+   - linux/riscv64
    - linux/s390x
 ```
 
