@@ -12,6 +12,10 @@ SAMBA_WIDE_LINKS=${SAMBA_WIDE_LINKS:-yes}
 SAMBA_HOSTS_ALLOW=${SAMBA_HOSTS_ALLOW:-127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16}
 #SAMBA_INTERFACES=${SAMBA_INTERFACES:-eth0}
 
+# https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#VFSOBJECTS
+# https://wiki.samba.org/index.php/Configure_Samba_to_Work_Better_with_Mac_OS_X
+SAMBA_GLOBAL_VFS_OBJECTS=${SAMBA_GLOBAL_VFS_OBJECTS:-catia fruit streams_xattr}
+
 echo "Setting timezone to ${TZ}"
 ln -snf "/usr/share/zoneinfo/${TZ}" /etc/localtime
 echo "${TZ}" > /etc/timezone
@@ -90,11 +94,16 @@ local master = no
 
 winbind scan trusted domains = yes
 
-vfs objects = fruit streams_xattr
+; "setting vfs objects in a share will *overwrite* this global"
+vfs objects = ${SAMBA_GLOBAL_VFS_OBJECTS}
+
+; fruit options
 fruit:metadata = stream
+fruit:nfs_aces = no
 fruit:model = MacSamba
-fruit:posix_rename = yes
 fruit:veto_appledouble = no
+fruit:posix_rename = yes
+fruit:zero_file_id = yes
 fruit:wipe_intentionally_left_blank_rfork = yes
 fruit:delete_empty_adfiles = yes
 fruit:time machine = yes
@@ -185,8 +194,8 @@ if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' "
     if [[ "$(_jq '.hidefiles')" != "null" ]] && [[ -n "$(_jq '.hidefiles')" ]]; then
       echo "hide files = $(_jq '.hidefiles')" >> /etc/samba/smb.conf
     fi
-    if [[ "$(_jq '.recycle')" != "null" ]] && [[ -n "$(_jq '.recycle')" ]]; then
-      echo "vfs objects = recycle" >> /etc/samba/smb.conf
+    if [[ -n "$(_jq '.recycle')" ]] && [[ "$(_jq '.recycle')" == "yes" ]]; then
+      echo "vfs objects = ${SAMBA_GLOBAL_VFS_OBJECTS} recycle" >> /etc/samba/smb.conf
       echo "recycle:repository = .recycle" >> /etc/samba/smb.conf
       echo "recycle:keeptree = yes" >> /etc/samba/smb.conf
       echo "recycle:versions = yes" >> /etc/samba/smb.conf
