@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1
 
-ARG ALPINE_VERSION=3.20
+ARG ALPINE_VERSION=3.21
 ARG S6_VERSION=2.2.0.3
 
-ARG SAMBA_VERSION=4.19.9
+ARG SAMBA_VERSION=4.20.6
 ARG WSDD2_VERSION=b676d8ac8f1aef792cb0761fb68a0a589ded3207
 
 FROM --platform=${BUILDPLATFORM} crazymax/alpine-s6:${ALPINE_VERSION}-${S6_VERSION} AS wsdd2-src
@@ -13,9 +13,11 @@ ADD "https://github.com/Netgear/wsdd2.git#${WSDD2_VERSION}" .
 
 # TODO: do cross-compilation in this stage to build wsdd2
 FROM crazymax/alpine-s6:${ALPINE_VERSION}-${S6_VERSION} AS wsdd2
-RUN apk --update --no-cache add linux-headers gcc make musl-dev
+RUN apk --update --no-cache add linux-headers gcc make musl-dev patch
 WORKDIR /src
 COPY --from=wsdd2-src /src /src
+COPY patches/wsdd2 /tmp/wsdd2-patches
+RUN patch -p1 < /tmp/wsdd2-patches/0001-fix-msghdr-initialization.patch
 RUN make DESTDIR=/dist install
 
 FROM crazymax/alpine-s6:${ALPINE_VERSION}-${S6_VERSION}
@@ -24,7 +26,7 @@ RUN apk --update --no-cache add \
     bash \
     coreutils \
     jq \
-    samba=${SAMBA_VERSION}-r0 \
+    samba=${SAMBA_VERSION}-r1 \
     shadow \
     tzdata \
     yq \
