@@ -13,9 +13,11 @@ ADD "https://github.com/Netgear/wsdd2.git#${WSDD2_VERSION}" .
 
 # TODO: do cross-compilation in this stage to build wsdd2
 FROM crazymax/alpine-s6:${ALPINE_VERSION}-${S6_VERSION} AS wsdd2
-RUN apk --update --no-cache add linux-headers gcc make musl-dev
+RUN apk --update --no-cache add linux-headers gcc make musl-dev patch
 WORKDIR /src
 COPY --from=wsdd2-src /src /src
+COPY patches/wsdd2 /tmp/wsdd2-patches
+RUN patch -p1 < /tmp/wsdd2-patches/0001-fix-msghdr-initialization.patch
 RUN make DESTDIR=/dist install
 
 FROM crazymax/alpine-s6:${ALPINE_VERSION}-${S6_VERSION}
