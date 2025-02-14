@@ -51,6 +51,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Define name for config .Files
+*/}}
+{{- define "samba.configFileName" -}}
+{{- default "config.yml" .Values.configFileName | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "samba.serviceAccountName" -}}

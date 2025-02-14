@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: smb-config-yml
+  name: samba-{{ include "samba.samba.configFileName" . | replace "." "-" }}
   labels:
   {{- include "samba.labels" . | nindent 4 }}
 data:
-  config.yml: |
+  {{ include "samba.configFileName" .}}: |
     auth:
     {{- range $value := $.Values.configMap.auth }}
     - user: {{ $value.user }}
