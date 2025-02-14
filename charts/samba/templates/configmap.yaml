@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smb-config-yml
+  labels:
+  {{- include "samba.labels" . | nindent 4 }}
+data:
+  config.yml: |
+    auth:
+    {{- range $value := $.Values.configMap.auth }}
+    - user: {{ $value.user }}
+      group: {{ $value.group }}
+      uid: {{ $value.uid }}
+      gid: {{ $value.gid }}
+      password: {{ $value.password }}
+    {{- end }}
+    share:
+    {{- range $.Values.configMap.share }}
+    - {{- range $key, $value := . }}
+      {{ $key }}: {{ $value -}}
+      {{- end -}}
+    {{ end }}
+    {{- if .Values.configMap.global }}
+    global:
+    {{- range $.Values.configMap.global }}
+    - {{ . -}}
+    {{ end }}
+    {{ end }}

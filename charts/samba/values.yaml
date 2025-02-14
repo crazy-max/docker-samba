@@ -1,0 +1,53 @@
+# Default values for samba.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+name:
+namespace:
+
+image:
+  repository: "ghcr.io/crazy-max/samba"
+  tag: "4.19.9@sha256:270a8dcaeb7be73c3a63e2d7cc966cfdc6ca70b418c59e4af406bee6ea41ded7"
+
+podLabels:
+  zfs-encryption: "true"
+
+ports:
+  - name: smb
+    containerPort: 445
+    hostPort: 445
+
+storage:
+  #storageClassName:
+  size: 1Gi
+
+envs:
+  - SAMBA_SERVER_STRING: "Spirit Samba"
+  - TZ: "Europe/Paris"
+  - SAMBA_LOG_LEVEL: "0"
+
+service:
+  port: 445
+
+secretEnvs:
+  - PASSWORD:
+
+configMap:
+  auth:
+    - user: backup
+      password: ${PASSWORD}
+      uid: 1001
+      gid: 1001
+      group: smb_users
+  share:
+    - name: misc
+      path: /mnt/misc
+      readonly: "no"
+      guestok: "no"
+    - name: Backup
+      path: /mnt/backup
+      readonly: "no"
+      guestok: "no"
+      validusers: "backup"
+  global:
+    - "force user = foo"
+    - "force user = foo"
