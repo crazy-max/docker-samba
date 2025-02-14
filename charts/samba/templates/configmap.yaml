@@ -14,12 +14,10 @@ data:
       gid: {{ $value.gid }}
       password: {{ $value.password }}
     {{- end }}
+    {{- if .Values.configMap.share }}
     share:
-    {{- range $.Values.configMap.share }}
-    - {{- range $key, $value := . }}
-      {{ $key }}: {{ $value -}}
-      {{- end -}}
-    {{ end }}
+    {{- toYaml .Values.configMap.share | nindent 4 }}
+    {{- end }}
     {{- if .Values.configMap.global }}
     global:
     {{- range $.Values.configMap.global }}
