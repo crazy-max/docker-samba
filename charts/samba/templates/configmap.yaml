@@ -7,20 +7,30 @@ metadata:
 data:
   {{ include "samba.configFileName" .}}: |
     auth:
-    {{- range $value := $.Values.configMap.auth }}
-    - user: {{ $value.user }}
-      group: {{ $value.group }}
-      uid: {{ $value.uid }}
-      gid: {{ $value.gid }}
-      password: {{ $value.password }}
+    {{- range $.Values.auth }}
+    - user: {{ .user }}
+      group: {{ .group }}
+      uid: {{ .uid }}
+      gid: {{ .gid }}
+      password: {{ .password }}
     {{- end }}
-    {{- if .Values.configMap.share }}
+    {{- if .Values.share }}
     share:
-    {{- toYaml .Values.configMap.share | nindent 4 }}
+    {{- range .Values.share }}
+    - {{- $first := true }}
+      {{- range $key, $value := . }}
+        {{- if ne $key "size" }}
+          {{- if not $first }}
+          {{- printf "\n      %s: %s" $key $value }}
+          {{- else }}
+          {{- printf " %s: %s" $key $value }}
+          {{- $first = false}}
+          {{- end }}
+        {{- end }}
+      {{- end }}
     {{- end }}
-    {{- if .Values.configMap.global }}
     global:
-    {{- range $.Values.configMap.global }}
+    {{- range $.Values.global }}
     - {{ . -}}
     {{ end }}
     {{ end }}
