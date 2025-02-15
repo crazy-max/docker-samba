@@ -1,5 +1,5 @@
 apiVersion: v2
-name: samba
+name: crazy-max-samba
 description: A Helm chart for crazy-max/docker-samba
 
 # A chart can be either an 'application' or a 'library' chart.

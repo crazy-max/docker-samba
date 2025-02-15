@@ -2,7 +2,7 @@ Congratulations! Your Samba server has been successfully deployed.
 
 To access your Samba server, use the following information:
 
-Service Name: {{ .Release.Name }}-samba
+Service Name: {{ .Release.Name }}-{{ .Chart.Name }}
 Namespace: {{ .Release.Namespace }}
 
 By default, the Samba server listens on the following ports:
