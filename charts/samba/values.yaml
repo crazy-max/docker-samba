@@ -21,19 +21,15 @@ storage:
   size: 1Gi
 
 envs:
-  - SAMBA_SERVER_STRING: "Spirit Samba"
   - TZ: "Europe/Paris"
   - SAMBA_LOG_LEVEL: "0"
 
 service:
   port: 445
 
-secretEnvs:
-  - PASSWORD:
-
 auth:
   - user: backup
-    password: ${PASSWORD}
+    password: ${BACKUP_USER_PASSWORD}
     uid: 1001
     gid: 1001
     group: smb_users

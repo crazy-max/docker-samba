@@ -41,6 +41,16 @@ spec:
             - name: samba
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+              {{- if .Values.auth }}
+              {{- range .Values.auth }}
+              env:
+                - name: {{ .user | upper }}-PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: samba-user-{{ .user }}-password
+                      key: password
+              {{- end }}
+              {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
