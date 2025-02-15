@@ -1,37 +1,51 @@
 # Default values for samba.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-nameOverride:
-namespace:
 
+# The name of the chart.
+# default: .Chart.Name
+# nameOverride:
+
+# The destination namespace where the chart will be deployed
+# default: .Release.Namespace
+# namespaceOverride:
+
+# The repository and image which is used.
 image:
   repository: "ghcr.io/crazy-max/samba"
   tag: "4.19.9@sha256:270a8dcaeb7be73c3a63e2d7cc966cfdc6ca70b418c59e4af406bee6ea41ded7"
 
-podLabels:
-  zfs-encryption: "true"
+# The labels attached to the pods.
+# Example:
+# podLabels:
+#   zfs-encryption: "true"
 
+# The ports used to access the smb server.
 ports:
-  - name: smb
+  - name: samba
     containerPort: 445
     hostPort: 445
 
+# The storage configuration for the smb server data directory.
 storage:
   #storageClassName:
   size: 1Gi
 
+# Additional environment variables for the samba server which will be injected to the container.
 envs:
   - TZ: "Europe/Paris"
   - SAMBA_LOG_LEVEL: "0"
-
-service:
-  port: 445
 
 auth:
   - user: backup
     password: ${BACKUP_USER_PASSWORD}
     uid: 1001
     gid: 1001
+    group: smb_users
+  - user: jojo
+    password: ${JOJO_USER_PASSWORD}
+    uid: 1002
+    gid: 1002
     group: smb_users
 
 share:
