@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.name }}
+  name: {{ include "samba.name" . }}-data
 spec:
   {{- if .Values.storage.storageClassName }}
-  storageClassName: {{ .Values.storage.storageClassName }}
+  storageClassName: {{ .Values.storage.storageClassName -}}
   {{ end }}
   accessModes:
     - ReadWriteOnce

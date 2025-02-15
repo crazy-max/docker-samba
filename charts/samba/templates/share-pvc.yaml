@@ -1,0 +1,17 @@
+{{- if .Values.share }}
+{{- range .Values.share }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "samba.name" $ }}-{{ .name }}
+spec:
+  {{- if $.Values.storage.storageClassName }}
+  storageClassName: {{ $.Values.storage.storageClassName -}}
+  {{- end }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .size }}
+{{- end }}
+{{- end }}

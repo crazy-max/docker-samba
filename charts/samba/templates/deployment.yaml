@@ -57,6 +57,14 @@ spec:
             - mountPath: /data/{{ include "samba.configFileName" . }}
               name: {{ include "samba.configFileName" . | replace "." "-"}}
               readOnly: true
+            - mountPath: /data
+              name: data-dir
+            {{- if .Values.share }}
+            {{- range .Values.share }}
+            - mountPath: {{ .path }}
+              name: {{ .name }}
+            {{- end }}
+            {{- end }}
       volumes:
       - name: {{ include "samba.configFileName" . | replace "." "-"}}
         configMap:
@@ -64,8 +72,16 @@ spec:
           items:
             - key: {{ include "samba.configFileName" . }}
               path: {{ include "samba.configFileName" . }}
-      - name: data
-
+      - name: data-dir
+        persistentVolumeClaim:
+          claimName: {{ include "samba.name" . }}-data
+      {{- if .Values.share }}
+      {{- range .Values.share }}
+      - name: {{ .name }}
+        persistentVolumeClaim:
+          claimName: {{ include "samba.name" $ }}-{{ .name }}
+      {{- end }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
