@@ -41,10 +41,9 @@ spec:
           {{- if .Values.ports }}
           ports:
           {{- range .Values.ports }}
-            - port:
-              - containerPort: {{ .containerPort }}
-                name: {{ .name }}
-                protocol: TCP
+            - containerPort: {{ .containerPort }}
+              name: {{ .name }}
+              protocol: TCP
           {{- end }}
           {{- end }}
           {{- if .Values.auth }}

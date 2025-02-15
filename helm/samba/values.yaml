@@ -48,11 +48,12 @@ ports:
 # Checks whether the Samba service is still running by connecting to localhost with smbclient.
 livenessProbe:
   exec:
-    command: -smbclient
+    command:
+      - smbclient
       - -L
       - \\localhost
       - -U
-      - %
+      - "%"
       - -m
       - SMB3
     initialDelaySeconds: 10
