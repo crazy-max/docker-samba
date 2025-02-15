@@ -20,47 +20,57 @@ image:
 # podLabels:
 #   zfs-encryption: "true"
 
-# The ports used to access the smb server.
+# The ports used to access the samba server.
+# It is possible to configure multiple ports: https://github.com/crazy-max/docker-samba?tab=readme-ov-file#ports
 ports:
   - name: samba
     containerPort: 445
     hostPort: 445
 
-# The storage configuration for the smb server data directory.
+# The storage configuration for the samba server data directory.
 storage:
-  #storageClassName:
-  size: 1Gi
+  # The storageClassName can be configured here.
+  # If there is no one configured, it uses the default storageClass
+  # storageClassName:
+  size: 5Gi
 
 # Additional environment variables for the samba server which will be injected to the container.
 envs:
   - TZ: "Europe/Paris"
   - SAMBA_LOG_LEVEL: "0"
 
+# The usermanagement.
+# Each user will be created on the samba server container.
+# The password of each user can be written here in in plain text but it is strongly discouraged.
+# By default it uses the environment variable which will read by a secret called samba-user-{{ .user }}-password.
+# You have to create this secret manually. It is recommended to use something like sealed secrets to encrypt you secrets and be able
+# to check it into your git repository.
 auth:
-  - user: backup
-    password: ${BACKUP_USER_PASSWORD}
-    uid: 1001
-    gid: 1001
-    group: smb_users
-  - user: jojo
-    password: ${JOJO_USER_PASSWORD}
-    uid: 1002
-    gid: 1002
-    group: smb_users
+  # - user: backup
+  #   password: ${BACKUP_USER_PASSWORD}
+  #   uid: 1001
+  #   gid: 1001
+  #   group: samba_users
 
+# Configuration of every share you want to create.
+# See Documentation for more information: https://github.com/crazy-max/docker-samba?tab=readme-ov-file#configuration
+# In addition you can specify the size of every share and the storageClass which the share should use.
+# If you don't specify the StorageClassName, the share will use the default one.
 share:
-  - name: misc
-    path: /mnt/misc
-    readonly: "no"
-    guestok: "no"
-    size: 10Gi
-  - name: Backup
-    path: /mnt/backup
-    readonly: "no"
-    guestok: "no"
-    validusers: "backup"
-    size: 8Gi
+  # - name: misc
+  #   path: /mnt/misc
+  #   readonly: "no"
+  #   guestok: "no"
+  #   size: 10Gi
+  #   storageClassName:
+  # - name: Backup
+  #   path: /mnt/backup
+  #   readonly: "no"
+  #   guestok: "no"
+  #   validusers: "backup"
+  #   size: 8Gi
 
+# Set global settings for samba server see: https://github.com/crazy-max/docker-samba?tab=readme-ov-file#configuration
 global:
   - "force user = foo"
   - "force user = foo"
