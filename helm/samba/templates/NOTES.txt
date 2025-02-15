@@ -1,0 +1,19 @@
+Congratulations! Your Samba server has been successfully deployed.
+
+To access your Samba server, use the following information:
+
+Service Name: {{ .Release.Name }}-samba
+Namespace: {{ .Release.Namespace }}
+
+By default, the Samba server listens on the following ports:
+- SMB: 445
+- NetBIOS: 137, 138, 139
+
+You can mount the shares with an SMB client as follows:
+
+smbclient -L //{{ .Release.Name }}-samba.{{ .Release.Namespace }}.svc.cluster.local -U <username>
+
+Replace `<username>` with the actual user name.
+
+Further information and configuration options can be found in the README of the project:
+https://github.com/crazy-max/docker-samba/helm/samba/README.md
