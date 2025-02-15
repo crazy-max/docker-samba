@@ -10,15 +10,32 @@
 # default: .Release.Namespace
 # namespaceOverride:
 
-# The repository and image which is used.
 image:
+  # The repository and image which is used.
   repository: "ghcr.io/crazy-max/samba"
   tag: "4.19.9@sha256:270a8dcaeb7be73c3a63e2d7cc966cfdc6ca70b418c59e4af406bee6ea41ded7"
+  # The pullpolicy of the image.
+  # Default: IfNotPresent
+  # See: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting
+  # pullPolicy:
 
-# The labels attached to the pods.
-# Example:
+# The labels attached to the pod.
 # podLabels:
-#   zfs-encryption: "true"
+
+# The annotations attached to the pod.
+# podAnnotations:
+
+# Configure imagePullSecret if you are using private registry
+# See: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+# imagePullSecrets:
+
+# Set podSecurityContext for the samba POD
+# See: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+# podSecurityContext:
+
+# Set securityContext for the sambe CONTAINER
+# See: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+# securityContext:
 
 # The ports used to access the samba server.
 # It is possible to configure multiple ports: https://github.com/crazy-max/docker-samba?tab=readme-ov-file#ports
@@ -26,6 +43,33 @@ ports:
   - name: samba
     containerPort: 445
     hostPort: 445
+
+livenessProbe:
+
+readinessProbe:
+
+# Define the resources of the samba pod.
+# See: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+# Example below.
+# resources:
+# requests:
+#   memory: "64Mi"
+#   cpu: "250m"
+# limits:
+#   memory: "128Mi"
+#   cpu: "500m"
+
+# Select node. Important if you have some local storage.
+# See: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+# nodeSelector:
+
+# Another way to assign the pod to a specific node
+# See: https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes-using-node-affinity/
+# affinity:
+
+# Support for tolerations
+# See: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+# tolerations:
 
 # The storage configuration for the samba server data directory.
 storage:

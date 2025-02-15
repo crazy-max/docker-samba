@@ -38,10 +38,15 @@ spec:
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.ports }}
           ports:
-            - name: samba
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
+          {{- range .Values.ports }}
+            - port:
+              - containerPort: {{ .containerPort }}
+                name: {{ .name }}
+                protocol: TCP
+          {{- end }}
+          {{- end }}
           {{- if .Values.auth }}
           {{- range .Values.auth }}
           env:

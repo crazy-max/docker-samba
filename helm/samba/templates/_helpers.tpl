@@ -64,7 +64,6 @@ Define name for config .Files
 {{- default "config.yml" .Values.configFileName | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-
 {{/*
 Create the name of the service account to use
 */}}
