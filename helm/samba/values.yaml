@@ -44,9 +44,31 @@ ports:
     containerPort: 445
     hostPort: 445
 
+# Configure health of the pod by defining live- and readinessProbes.
+# Checks whether the Samba service is still running by connecting to localhost with smbclient.
 livenessProbe:
+  exec:
+    command: -smbclient
+      - -L
+      - \\localhost
+      - -U
+      - %
+      - -m
+      - SMB3
+    initialDelaySeconds: 10
+    periodSeconds: 30
+    timeoutSeconds: 5
+    failureThreshold: 3
 
+# Uses smbstatus to check whether Samba is active and can accept clients.
 readinessProbe:
+  exec:
+    command:
+      - smbstatus
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
 
 # Define the resources of the samba pod.
 # See: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
