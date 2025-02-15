@@ -1,5 +1,6 @@
 {{- if .Values.share }}
 {{- range .Values.share }}
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
