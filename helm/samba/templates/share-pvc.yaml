@@ -5,7 +5,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ include "samba.name" $ }}-{{ .name }}
-  namespace: {{ include "samba.namespaceOverride" . }}
+  namespace: {{ include "samba.namespace" . }}
 spec:
   {{- if .storageClassName }}
   storageClassName: {{ .storageClassName -}}

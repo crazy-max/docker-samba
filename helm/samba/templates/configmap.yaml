@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: samba-{{ include "samba.configFileName" . | replace "." "-" }}
-  namespace: {{ include "samba.namespaceOverride" . }}
+  namespace: {{ include "samba.namespace" . }}
   labels:
   {{- include "samba.labels" . | nindent 4 }}
 data:
