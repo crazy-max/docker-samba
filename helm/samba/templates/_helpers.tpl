@@ -27,7 +27,7 @@ If release name contains chart name it will be used as a full name.
 Define the namespace where the chart will be installed.
 */}}
 {{- define "samba.namespace" -}}
-{{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
+{{- default .Chart.Name .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*

@@ -42,6 +42,7 @@ spec:
           ports:
           {{- range .Values.ports }}
             - containerPort: {{ .containerPort }}
+              hostPort: {{ .hostPort }}
               name: {{ .name }}
               protocol: TCP
           {{- end }}
