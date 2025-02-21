@@ -56,20 +56,20 @@ livenessProbe:
       - "%"
       - -m
       - SMB3
-    initialDelaySeconds: 10
-    periodSeconds: 30
-    timeoutSeconds: 5
-    failureThreshold: 3
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
 
 # Uses smbstatus to check whether Samba is active and can accept clients.
 readinessProbe:
   exec:
     command:
       - smbstatus
-    initialDelaySeconds: 5
-    periodSeconds: 10
-    timeoutSeconds: 3
-    failureThreshold: 3
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
 
 # Define the resources of the samba pod.
 # See: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
