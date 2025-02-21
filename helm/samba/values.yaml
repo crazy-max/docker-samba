@@ -74,13 +74,13 @@ readinessProbe:
 # Define the resources of the samba pod.
 # See: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 # Example below.
-# resources:
-# requests:
-#   memory: "64Mi"
-#   cpu: "250m"
-# limits:
-#   memory: "128Mi"
-#   cpu: "500m"
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "250m"
+  # limits:
+  #   memory: "128Mi"
+  #   cpu: "500m"
 
 # Select node. Important if you have some local storage.
 # See: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
@@ -130,7 +130,7 @@ share:
   #   guestok: "no"
   #   size: 10Gi
   #   storageClassName:
-  # - name: Backup
+  # - name: backup
   #   path: /mnt/backup
   #   readonly: "no"
   #   guestok: "no"
