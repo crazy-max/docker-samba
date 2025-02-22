@@ -1,0 +1,20 @@
+{{- if .Values}}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    {{- include "samba.labels" . | nindent 4 }}
+  name: {{ include "samba.name" . }}
+  namespace: {{ include "samba.namespace" . }}
+spec:
+  ports:
+  {{- range .Values.ports }}
+    - name: {{ .name }}
+      port: {{ .containerPort }}
+      protocol: TCP
+      targetPort:  {{ .containerPort }}
+  {{- end }}
+  selector:
+    {{- include "samba.labels" . | nindent 4 }}
+  type: ClusterIP
+{{- end }}

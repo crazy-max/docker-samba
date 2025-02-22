@@ -44,6 +44,10 @@ ports:
     containerPort: 445
     hostPort: 445
 
+# Service to reach smb container in the cluster.
+service:
+  enabled: false
+
 # Configure health of the pod by defining live- and readinessProbes.
 # Checks whether the Samba service is still running by connecting to localhost with smbclient.
 livenessProbe:
