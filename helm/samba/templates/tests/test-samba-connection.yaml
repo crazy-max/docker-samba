@@ -15,5 +15,5 @@ spec:
      containers:
        - name: smbclient
          image: alpine:latest
-         command: ['sh', '-c', 'apk add --no-cache samba-client && smbclient -L //{{ include "samba.fullname" . }} -U%']
+         command: ['sh', '-c', 'apk add --no-cache samba-client && smbclient -L //{{ include "samba.name" . }} -U%']
      restartPolicy: Never

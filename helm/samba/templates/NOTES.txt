@@ -11,7 +11,7 @@ By default, the Samba server listens on the following ports:
 
 You can mount the shares with an SMB client as follows:
 
-smbclient -L //{{ .Release.Name }}-samba.{{ .Release.Namespace }}.svc.cluster.local -U <username>
+smbclient -L //<server ip> -U <username>
 
 Replace `<username>` with the actual user name.
 
