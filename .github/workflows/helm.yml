@@ -4,13 +4,9 @@ on:
   pull_request:
     branches:
       - master
-    paths:
-      - helm/**
   push:
     branches:
       - master
-    paths:
-      - helm/**
 
 jobs:
   lint-test:
