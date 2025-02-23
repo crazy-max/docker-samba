@@ -30,8 +30,10 @@ data:
         {{- end }}
       {{- end }}
     {{- end }}
+    {{- if $.Values.global }}
     global:
     {{- range $.Values.global }}
     - {{ . -}}
+    {{ end }}
     {{ end }}
     {{ end }}
