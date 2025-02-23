@@ -140,8 +140,8 @@ share:
   #   guestok: "no"
   #   validusers: "backup"
   #   size: 8Gi
-
+  #   storageClassName:
 # -- Set global settings for samba server see: https://github.com/crazy-max/docker-samba?tab=readme-ov-file#configuration
-global:
-  - "force user = foo"
-  - "force user = foo"
+# global:
+#   - "force user = foo"
+#   - "force user = foo"
