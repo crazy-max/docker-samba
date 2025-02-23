@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: samba-{{ include "samba.configFileName" . | replace "." "-" }}
+  namespace: {{ include "samba.namespace" . }}
+  labels:
+  {{- include "samba.labels" . | nindent 4 }}
+data:
+  {{ include "samba.configFileName" .}}: |
+    auth:
+    {{- range $.Values.auth }}
+    - user: {{ .user }}
+      group: {{ .group }}
+      uid: {{ .uid }}
+      gid: {{ .gid }}
+      password: {{ .password }}
+    {{- end }}
+    {{- if .Values.share }}
+    share:
+    {{- range .Values.share }}
+    - {{- $first := true }}
+      {{- range $key, $value := . }}
+        {{- if or (ne $key "size") (ne $key "storageClassName") }}
+          {{- if not $first }}
+          {{- printf "\n      %s: %s" $key $value }}
+          {{- else }}
+          {{- printf " %s: %s" $key $value }}
+          {{- $first = false}}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if $.Values.global }}
+    global:
+    {{- range $.Values.global }}
+    - {{ . -}}
+    {{ end }}
+    {{ end }}
+    {{ end }}
