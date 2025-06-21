@@ -4,6 +4,9 @@ auth:
     uid: 1000
     gid: 1000
     password: bar
+    groups:
+      - group1:2001
+      - group2:2002
   - user: yyy
     group: xxx
     uid: 1100
