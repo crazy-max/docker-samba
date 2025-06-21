@@ -121,6 +121,19 @@ if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' "
     echo "Creating user $(_jq '.user')/$(_jq '.group') ($(_jq '.uid'):$(_jq '.gid'))"
     id -g "$(_jq '.gid')" &>/dev/null || id -gn "$(_jq '.group')" &>/dev/null || addgroup -g "$(_jq '.gid')" -S "$(_jq '.group')"
     id -u "$(_jq '.uid')" &>/dev/null || id -un "$(_jq '.user')" &>/dev/null || adduser -u "$(_jq '.uid')" -G "$(_jq '.group')" "$(_jq '.user')" -SHD
+    groups=$(_jq '.groups')
+    if [[ "$groups" != "null" ]]; then
+        for group_spec in $(echo "$groups" | jq -r '.[]'); do
+            group_name=$(echo "$group_spec" | cut -d: -f1)
+            group_gid=$(echo "$group_spec" | cut -d: -f2)
+            if ! id -g "$group_gid" &>/dev/null && ! id -gn "$group_name" &>/dev/null; then
+                echo "Creating supplementary group $group_name ($group_gid)"
+                addgroup -g "$group_gid" -S "$group_name"
+            fi
+            echo "Adding user $(_jq '.user') to group $group_name"
+            addgroup "$(_jq '.user')" "$group_name"
+        done
+    fi
     echo -e "$password\n$password" | smbpasswd -a -s "$(_jq '.user')"
     unset password
   done

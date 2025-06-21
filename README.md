@@ -127,6 +127,9 @@ auth:
     uid: 1000
     gid: 1000
     password: bar
+    groups:
+      - group1:2000
+      - group2:2001
   - user: baz
     group: xxx
     uid: 1100
