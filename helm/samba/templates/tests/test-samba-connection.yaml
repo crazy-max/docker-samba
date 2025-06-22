@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+ name: "{{ include "samba.fullname" . }}-test-connection"
+ labels:
+   {{- include "samba.labels" . | nindent 4 }}
+ annotations:
+   "helm.sh/hook": test
+spec:
+ template:
+   metadata:
+     labels:
+       {{- include "samba.labels" . | nindent 8 }}
+   spec:
+     containers:
+       - name: smbclient
+         image: alpine:latest
+         command: ['sh', '-c', 'apk add --no-cache samba-client && smbclient -L //{{ include "samba.name" . }} -U%']
+     restartPolicy: Never
