@@ -185,7 +185,7 @@ if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' "
     if [[ "$(_jq '.hidefiles')" != "null" ]] && [[ -n "$(_jq '.hidefiles')" ]]; then
       echo "hide files = $(_jq '.hidefiles')" >> /etc/samba/smb.conf
     fi
-    if [[ "$(_jq '.recycle')" != "null" ]] && [[ -n "$(_jq '.recycle')" ]]; then
+    if [[ "$(_jq '.recycle')" != "null" ]] && [[ "$(_jq '.recycle')" = "yes" ]]; then
       echo "vfs objects = recycle" >> /etc/samba/smb.conf
       echo "recycle:repository = .recycle" >> /etc/samba/smb.conf
       echo "recycle:keeptree = yes" >> /etc/samba/smb.conf
