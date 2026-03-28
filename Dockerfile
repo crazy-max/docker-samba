@@ -1,9 +1,11 @@
 # syntax=docker/dockerfile:1
 
-ARG ALPINE_VERSION=3.22
+ARG ALPINE_VERSION=3.23
 ARG S6_VERSION=2.2.0.3
 
-ARG SAMBA_VERSION=4.21.4
+ARG SAMBA_VERSION=4.22.8
+ARG SAMBA_REVISION=r0
+
 ARG WSDD2_VERSION=b676d8ac8f1aef792cb0761fb68a0a589ded3207
 
 FROM --platform=${BUILDPLATFORM} crazymax/alpine-s6:${ALPINE_VERSION}-${S6_VERSION} AS wsdd2-src
@@ -22,11 +24,12 @@ RUN make DESTDIR=/dist install
 
 FROM crazymax/alpine-s6:${ALPINE_VERSION}-${S6_VERSION}
 ARG SAMBA_VERSION
+ARG SAMBA_REVISION
 RUN apk --update --no-cache add \
     bash \
     coreutils \
     jq \
-    samba=${SAMBA_VERSION}-r4 \
+    samba=${SAMBA_VERSION}-${SAMBA_REVISION} \
     shadow \
     tzdata \
     yq \
