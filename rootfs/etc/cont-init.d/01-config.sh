@@ -109,6 +109,18 @@ bind interfaces only = yes
 EOL
 fi
 
+if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' "${CONFIG_FILE}" 2>/dev/null | jq '.group')" != "null" ]]; then
+  for group_entry in $(yq -j e '(.. | select(tag == "!!str")) |= envsubst' "${CONFIG_FILE}" 2>/dev/null | jq -r '.group | to_entries[] | @base64'); do
+    _jq() {
+      echo "${group_entry}" | base64 --decode | jq -r "${1}"
+    }
+    group_name=$(_jq '.key')
+    group_id=$(_jq '.value')
+    echo "Creating group $group_name with GID $group_id"
+    id -g "$group_id" &>/dev/null || id -gn "$group_name" &>/dev/null || addgroup -g "$group_id" -S "$group_name"
+  done
+fi
+
 if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' "${CONFIG_FILE}" 2>/dev/null | jq '.auth')" != "null" ]]; then
   for auth in $(yq -j e '(.. | select(tag == "!!str")) |= envsubst' "${CONFIG_FILE}" 2>/dev/null | jq -r '.auth[] | @base64'); do
     _jq() {
@@ -121,6 +133,13 @@ if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' "
     echo "Creating user $(_jq '.user')/$(_jq '.group') ($(_jq '.uid'):$(_jq '.gid'))"
     id -g "$(_jq '.gid')" &>/dev/null || id -gn "$(_jq '.group')" &>/dev/null || addgroup -g "$(_jq '.gid')" -S "$(_jq '.group')"
     id -u "$(_jq '.uid')" &>/dev/null || id -un "$(_jq '.user')" &>/dev/null || adduser -u "$(_jq '.uid')" -G "$(_jq '.group')" "$(_jq '.user')" -SHD
+    groups=$(_jq '.groups')
+    if [[ "$groups" != "null" ]]; then
+      for group_name in $(echo "$groups" | jq -r '.[]'); do
+        echo "Adding user $(_jq '.user') to group $group_name"
+        addgroup "$(_jq '.user')" "$group_name"
+      done
+    fi
     echo -e "$password\n$password" | smbpasswd -a -s "$(_jq '.user')"
     unset password
   done
