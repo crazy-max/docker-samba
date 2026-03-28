@@ -100,7 +100,8 @@ linux/s390x
 * `WSDD2_NETBIOS_NAME`: Set NetBIOS name (default to hostname)
 * `WSDD2_INTERFACE`: Reply only on this interface
 
-> More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
+> [!NOTE]
+> https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
 
 ## Volumes
 
@@ -112,7 +113,8 @@ linux/s390x
 * `3702`: WS-Discovery TCP/UDP port
 * `5355`: LLMNR TCP/UDP port
 
-> More info: https://wiki.samba.org/index.php/Samba_NT4_PDC_Port_Usage
+> [!NOTE]
+> https://wiki.samba.org/index.php/Samba_NT4_PDC_Port_Usage
 
 ## Configuration
 
@@ -161,7 +163,8 @@ visible or accessible:
 /._*/.apdisk/.AppleDouble/.DS_Store/.TemporaryItems/.Trashes/desktop.ini/ehthumbs.db/Network Trash Folder/Temporary Items/Thumbs.db/
 ```
 
-> More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#VETOFILES
+> [!NOTE]
+> https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#VETOFILES
 
 ### `hidefiles`
 
@@ -173,14 +176,21 @@ visible or accessible:
 
 In this example, all files and directories beginning with an underscore (`_`) will be hidden.
 
-> More info: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#HIDEFILES
+> [!NOTE]
+> https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#HIDEFILES
 
 ### `recycle`
 
 `recycle: yes` this option enables `vfs_recycle` module.
-The `vfs_recycle` intercepts file deletion requests and moves the affected files to a temporary repository rather than deleting them immediately. This gives the same effect as the Recycle Bin on Windows computers.
 
-> More info: https://www.samba.org/samba/docs/current/man-html/vfs_recycle.8.html
+The `vfs_recycle` intercepts file deletion requests and moves the affected
+files to a temporary repository rather than deleting them immediately. This
+gives the same effect as the Recycle Bin on Windows computers. On this image it
+is stacked with the default `fruit` and `streams_xattr` VFS modules so macOS
+shares keep a consistent VFS configuration.
+
+> [!NOTE]
+> https://www.samba.org/samba/docs/current/man-html/vfs_recycle.8.html
 
 ## Usage
 
