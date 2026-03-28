@@ -121,7 +121,7 @@ if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' "
     echo "Creating user $(_jq '.user')/$(_jq '.group') ($(_jq '.uid'):$(_jq '.gid'))"
     id -g "$(_jq '.gid')" &>/dev/null || id -gn "$(_jq '.group')" &>/dev/null || addgroup -g "$(_jq '.gid')" -S "$(_jq '.group')"
     id -u "$(_jq '.uid')" &>/dev/null || id -un "$(_jq '.user')" &>/dev/null || adduser -u "$(_jq '.uid')" -G "$(_jq '.group')" "$(_jq '.user')" -SHD
-    echo -e "$password\n$password" | smbpasswd -a -s "$(_jq '.user')"
+    printf '%s\n%s\n' "$password" "$password" | smbpasswd -a -s "$(_jq '.user')"
     unset password
   done
 fi
@@ -145,7 +145,7 @@ if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' "
       >&2 echo "ERROR: Name required"
       exit 1
     fi
-    echo -e "\n[$(_jq '.name')]" >> /etc/samba/smb.conf
+    printf '\n[%s]\n' "$(_jq '.name')" >> /etc/samba/smb.conf
     if [[ "$(_jq '.path')" = "null" ]] || [[ -z "$(_jq '.path')" ]]; then
       >&2 echo "ERROR: Path required"
       exit 1
