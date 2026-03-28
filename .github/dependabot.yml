@@ -4,6 +4,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 2
     labels:
       - "kind/dependencies"
       - "bot"
