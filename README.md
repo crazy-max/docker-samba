@@ -181,7 +181,8 @@ In this example, all files and directories beginning with an underscore (`_`) wi
 
 ### `recycle`
 
-`recycle: yes` this option enables `vfs_recycle` module.
+`recycle: yes` enables the `vfs_recycle` module. Any other value, including
+`no`, leaves recycle disabled.
 
 The `vfs_recycle` intercepts file deletion requests and moves the affected
 files to a temporary repository rather than deleting them immediately. This
