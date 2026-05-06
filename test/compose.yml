@@ -19,6 +19,7 @@ services:
     environment:
       - "TZ=Europe/Paris"
       - "BROWSABLE=yes"
+      - "AVAHI_ENABLE=1"
       - "WSDD2_ENABLE=1"
       - "WSDD2_NETBIOS_NAME=docker_samba"
     restart: always

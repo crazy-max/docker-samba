@@ -26,6 +26,7 @@ FROM crazymax/alpine-s6:${ALPINE_VERSION}-${S6_VERSION}
 ARG SAMBA_VERSION
 ARG SAMBA_REVISION
 RUN apk --update --no-cache add \
+    avahi \
     bash \
     coreutils \
     jq \
@@ -33,12 +34,14 @@ RUN apk --update --no-cache add \
     shadow \
     tzdata \
     yq \
+  && sed -i 's/^#*enable-dbus=.*/enable-dbus=no/' /etc/avahi/avahi-daemon.conf \
+  && rm -f /etc/avahi/services/* \
   && rm -rf /tmp/*
 
 COPY --from=wsdd2 /dist/usr/sbin/wsdd2 /usr/bin/
 COPY rootfs /
 
-EXPOSE 445 3702/tcp 3702/udp 5355/tcp 5355/udp
+EXPOSE 445 5353/udp 3702/tcp 3702/udp 5355/tcp 5355/udp
 VOLUME [ "/data" ]
 ENTRYPOINT [ "/init" ]
 
