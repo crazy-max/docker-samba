@@ -63,10 +63,10 @@ docker buildx bake image-all
 
 ## Image
 
-| Registry                                                                                         | Image                           |
-|--------------------------------------------------------------------------------------------------|---------------------------------|
-| [Docker Hub](https://hub.docker.com/r/crazymax/samba/)                                           | `crazymax/samba`                |
-| [GitHub Container Registry](https://github.com/users/crazy-max/packages/container/package/samba) | `ghcr.io/crazy-max/samba`       |
+| Registry                                                                                         | Image                     |
+| ------------------------------------------------------------------------------------------------ | ------------------------- |
+| [Docker Hub](https://hub.docker.com/r/crazymax/samba/)                                           | `crazymax/samba`          |
+| [GitHub Container Registry](https://github.com/users/crazy-max/packages/container/package/samba) | `ghcr.io/crazy-max/samba` |
 
 Following platforms for this image are available:
 
@@ -215,6 +215,10 @@ docker run -d --network host \
   -v "$(pwd)/data:/data" \
   --name samba crazymax/samba
 ```
+
+### Helm
+
+If you want to deploy this Container in your Kubernetes Cluster you can you this Helm Chart: https://github.com/tzabbi/crazy-max-samba-helm
 
 ## Upgrade
 
