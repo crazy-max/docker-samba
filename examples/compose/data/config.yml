@@ -39,6 +39,8 @@ share:
     writelist: foo
     veto: no
     hidefiles: /_*/
+    createmask: 644
+    directorymask: 755
   - name: foo-baz
     path: /samba/foo-baz
     browsable: yes
@@ -47,3 +49,5 @@ share:
     validusers: foo,baz
     writelist: foo,baz
     veto: no
+    forcecreatemode: 644
+    forcedirectorymode: 755

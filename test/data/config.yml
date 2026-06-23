@@ -26,6 +26,8 @@ share:
     writelist: ""
     veto: no
     recycle: yes
+    forcecreatemode: 644
+    forcedirectorymode: 755
   - name: share
     path: /samba/share
     browsable: ${BROWSABLE}
@@ -33,6 +35,8 @@ share:
     guestok: yes
     writelist: foo
     veto: no
+    createmask: 644
+    directorymask: 755
   - name: foo
     path: /samba/foo
     browsable: ${BROWSABLE}

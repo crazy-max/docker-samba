@@ -191,6 +191,18 @@ if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' "
       echo "recycle:keeptree = yes" >> /etc/samba/smb.conf
       echo "recycle:versions = yes" >> /etc/samba/smb.conf
     fi
+    if [[ "$(_jq '.createmask')" != "null" ]] && [[ -n "$(_jq '.createmask')" ]]; then
+      echo "create mask = $(_jq '.createmask')" >> /etc/samba/smb.conf
+    fi
+    if [[ "$(_jq '.directorymask')" != "null" ]] && [[ -n "$(_jq '.directorymask')" ]]; then
+      echo "directory mask = $(_jq '.directorymask')" >> /etc/samba/smb.conf
+    fi
+    if [[ "$(_jq '.forcecreatemode')" != "null" ]] && [[ -n "$(_jq '.forcecreatemode')" ]]; then
+      echo "force create mode = $(_jq '.forcecreatemode')" >> /etc/samba/smb.conf
+    fi
+    if [[ "$(_jq '.forcedirectorymode')" != "null" ]] && [[ -n "$(_jq '.forcedirectorymode')" ]]; then
+      echo "force directory mode = $(_jq '.forcedirectorymode')" >> /etc/samba/smb.conf
+    fi
   done
 fi
 
