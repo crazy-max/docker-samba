@@ -44,4 +44,4 @@ VOLUME [ "/data" ]
 ENTRYPOINT [ "/init" ]
 
 HEALTHCHECK --interval=30s --timeout=10s \
-  CMD smbclient -L \\localhost -U % -m SMB3
+  CMD ["sh", "/usr/local/bin/healthcheck"]

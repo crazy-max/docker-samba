@@ -1,0 +1,10 @@
+#!/bin/sh
+
+out="$(smbclient -L \\localhost -U % -m SMB3 2>&1)"
+rc=$?
+
+if printf '%s\n' "$out" | grep -q 'NT_STATUS_ACCESS_DENIED'; then
+  exit 0
+fi
+
+exit "$rc"
