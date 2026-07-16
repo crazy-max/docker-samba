@@ -66,7 +66,7 @@ docker buildx bake image-all
 ## Image
 
 | Registry                                                                                         | Image                     |
-| ------------------------------------------------------------------------------------------------ | ------------------------- |
+|--------------------------------------------------------------------------------------------------|---------------------------|
 | [Docker Hub](https://hub.docker.com/r/crazymax/samba/)                                           | `crazymax/samba`          |
 | [GitHub Container Registry](https://github.com/users/crazy-max/packages/container/package/samba) | `ghcr.io/crazy-max/samba` |
 
@@ -76,7 +76,6 @@ Following platforms for this image are available:
 $ docker buildx imagetools inspect crazymax/samba --format "{{json .Manifest}}" | \
   jq -r '.manifests[] | select(.platform.os != null and .platform.os != "unknown") | .platform | "\(.os)/\(.architecture)\(if .variant then "/" + .variant else "" end)"'
 
-linux/386
 linux/amd64
 linux/arm/v6
 linux/arm/v7
