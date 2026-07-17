@@ -31,8 +31,13 @@ share:
     browsable: ${BROWSABLE}
     readonly: no
     guestok: yes
-    writelist: foo
     veto: no
+    options:
+      - "create mask = 0644"
+      - "directory mask = 0755"
+      - "force user = yyy"
+      - "force group = xxx"
+      - "store dos attributes = yes"
   - name: foo
     path: /samba/foo
     browsable: ${BROWSABLE}

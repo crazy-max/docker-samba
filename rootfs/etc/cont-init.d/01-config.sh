@@ -191,6 +191,13 @@ if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' "
       echo "recycle:keeptree = yes" >> /etc/samba/smb.conf
       echo "recycle:versions = yes" >> /etc/samba/smb.conf
     fi
+    if [[ "$(_jq '.options')" != "null" ]]; then
+      for option in $(echo "${share}" | base64 --decode | jq -r '.options[] | @base64'); do
+        option=$(echo "$option" | base64 --decode)
+        echo "Add option for share $(_jq '.name'): ${option}"
+        echo "${option}" >> /etc/samba/smb.conf
+      done
+    fi
   done
 fi
 

@@ -29,6 +29,7 @@ ___
   * [`veto`](#veto)
   * [`hidefiles`](#hidefiles)
   * [`recycle`](#recycle)
+  * [`options`](#options)
 * [Usage](#usage)
   * [Docker Compose](#docker-compose)
   * [Command line](#command-line)
@@ -158,6 +159,10 @@ share:
     veto: no
     hidefiles: /_*/
     recycle: yes
+    options:
+      - "create mask = 0644"
+      - "directory mask = 0755"
+      - "store dos attributes = yes"
 ```
 
 A more complete `config.yml` example is available [here](examples/compose/data/config.yml).
@@ -200,6 +205,32 @@ shares keep a consistent VFS configuration.
 
 > [!NOTE]
 > https://www.samba.org/samba/docs/current/man-html/vfs_recycle.8.html
+
+### `options`
+
+`options` is a list of raw Samba share parameters appended to the generated
+share section. Use it for share-specific settings that are not modeled as
+first-class YAML keys:
+
+```yaml
+share:
+  - name: media
+    path: /samba/media
+    readonly: no
+    guestok: yes
+    options:
+      - "create mask = 0664"
+      - "directory mask = 0775"
+      - "force user = media"
+      - "force group = media"
+      - "store dos attributes = yes"
+```
+
+These options are written after the generated share settings, so they can also
+override generated defaults when needed.
+
+> [!NOTE]
+> https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
 
 ## Usage
 
