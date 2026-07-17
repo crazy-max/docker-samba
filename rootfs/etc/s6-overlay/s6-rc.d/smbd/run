@@ -1,0 +1,3 @@
+#!/command/with-contenv sh
+
+exec smbd -F --debug-stdout --no-process-group

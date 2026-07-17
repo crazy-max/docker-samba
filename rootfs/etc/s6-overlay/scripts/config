@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv bash
+#!/bin/bash
 # shellcheck shell=bash
 
 TZ=${TZ:-UTC}
@@ -11,6 +11,21 @@ SAMBA_FOLLOW_SYMLINKS=${SAMBA_FOLLOW_SYMLINKS:-yes}
 SAMBA_WIDE_LINKS=${SAMBA_WIDE_LINKS:-yes}
 SAMBA_HOSTS_ALLOW=${SAMBA_HOSTS_ALLOW:-127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16}
 #SAMBA_INTERFACES=${SAMBA_INTERFACES:-eth0}
+
+: "${AVAHI_ENABLE:=0}"
+: "${AVAHI_INTERFACES:=}"
+: "${AVAHI_NAME:=%h}"
+: "${AVAHI_HOSTNAME:=}"
+: "${AVAHI_MODEL:=RackMac}"
+: "${AVAHI_ADISK_NAME:=}"
+
+xml_escape() {
+  printf '%s' "$1" | sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g'
+}
+
+sed_escape() {
+  printf '%s' "$1" | sed -e 's/[\/&]/\\&/g'
+}
 
 echo "Setting timezone to ${TZ}"
 ln -snf "/usr/share/zoneinfo/${TZ}" /etc/localtime
@@ -41,7 +56,7 @@ if [ ! -L /var/cache/samba ]; then
 fi
 
 echo "Setting global configuration"
-  cat > /etc/samba/smb.conf <<EOL
+cat > /etc/samba/smb.conf <<EOL
 [global]
 workgroup = ${SAMBA_WORKGROUP}
 server string = ${SAMBA_SERVER_STRING}
@@ -128,8 +143,8 @@ fi
 
 if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' "${CONFIG_FILE}" 2>/dev/null | jq '.global')" != "null" ]]; then
   for global in $(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' "${CONFIG_FILE}" 2>/dev/null | jq -r '.global[] | @base64'); do
-  echo "Add global option: $(echo "$global" | base64 --decode)"
-  cat >> /etc/samba/smb.conf <<EOL
+    echo "Add global option: $(echo "$global" | base64 --decode)"
+    cat >> /etc/samba/smb.conf <<EOL
 $(echo "$global" | base64 --decode)
 EOL
   done
@@ -199,6 +214,54 @@ if [[ "$(yq --output-format=json e '(.. | select(tag == "!!str")) |= envsubst' "
       done
     fi
   done
+fi
+
+if [ "$AVAHI_ENABLE" = "1" ]; then
+  avahiModel=$(xml_escape "${AVAHI_MODEL}")
+  avahiAdiskName=$(xml_escape "${AVAHI_ADISK_NAME}")
+  avahiName=$(xml_escape "${AVAHI_NAME}")
+  avahiInterfaces=$(sed_escape "${AVAHI_INTERFACES}")
+  avahiHostname=$(sed_escape "${AVAHI_HOSTNAME}")
+
+  if [ -n "${AVAHI_HOSTNAME}" ]; then
+    sed -i "s/^#*host-name=.*/host-name=${avahiHostname}/" /etc/avahi/avahi-daemon.conf
+  fi
+
+  if [ -n "${AVAHI_INTERFACES}" ]; then
+    sed -i "s/^#*allow-interfaces=.*/allow-interfaces=${avahiInterfaces}/" /etc/avahi/avahi-daemon.conf
+  fi
+
+  mkdir -p /etc/avahi/services
+  cat > /etc/avahi/services/samba.service <<EOL
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<service-group>
+  <name replace-wildcards="yes">${avahiName}</name>
+  <service>
+    <type>_smb._tcp</type>
+    <port>445</port>
+  </service>
+  <service>
+    <type>_device-info._tcp</type>
+    <port>0</port>
+    <txt-record>model=${avahiModel}</txt-record>
+  </service>
+EOL
+
+  if [ -n "${AVAHI_ADISK_NAME}" ]; then
+    cat >> /etc/avahi/services/samba.service <<EOL
+  <service>
+    <type>_adisk._tcp</type>
+    <port>9</port>
+    <txt-record>sys=waMa=0,adVF=0x100</txt-record>
+    <txt-record>dk0=adVN=${avahiAdiskName},adVF=0x82</txt-record>
+  </service>
+EOL
+  fi
+
+  cat >> /etc/avahi/services/samba.service <<EOL
+</service-group>
+EOL
 fi
 
 testparm -s

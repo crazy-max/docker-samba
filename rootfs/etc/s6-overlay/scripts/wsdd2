@@ -1,0 +1,22 @@
+#!/bin/sh
+
+: "${SAMBA_WORKGROUP:=WORKGROUP}"
+: "${WSDD2_HOSTNAME:=}"
+: "${WSDD2_NETBIOS_NAME:=}"
+: "${WSDD2_INTERFACE:=}"
+
+set -- -G "${SAMBA_WORKGROUP}" -W
+
+if [ -n "${WSDD2_HOSTNAME}" ]; then
+  set -- "$@" -H "${WSDD2_HOSTNAME}"
+fi
+
+if [ -n "${WSDD2_NETBIOS_NAME}" ]; then
+  set -- "$@" -N "${WSDD2_NETBIOS_NAME}"
+fi
+
+if [ -n "${WSDD2_INTERFACE}" ]; then
+  set -- "$@" -i "${WSDD2_INTERFACE}"
+fi
+
+exec /usr/bin/wsdd2 "$@"
