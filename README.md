@@ -98,6 +98,8 @@ linux/s390x
 * `SAMBA_INTERFACES`: Allows you to override the default network interfaces list.
 * `AVAHI_ENABLE`: Enable [service discovery for Linux and macOS](#service-discovery-for-linux-and-macos) (default `0`)
 * `AVAHI_INTERFACES`: Comma-separated network interfaces Avahi is allowed to use
+* `AVAHI_NAME`: Service instance name advertised through Avahi (default `%h` for the Avahi hostname)
+* `AVAHI_HOSTNAME`: Avahi hostname without the `.local` suffix (default to the container hostname)
 * `AVAHI_MODEL`: Finder device model advertised through Avahi (default `RackMac`)
 * `AVAHI_ADISK_NAME`: Time Machine share name advertised through `_adisk._tcp` (disabled by default)
 * `WSDD2_ENABLE`: Enable [service discovery for Windows](#service-discovery-for-windows) (default `0`)
@@ -302,8 +304,15 @@ mDNS uses multicast UDP port `5353`, so the container must use host networking
 on a Linux host. Docker Desktop host networking on macOS and Windows does not
 provide LAN-visible multicast discovery for this use case.
 
-The advertised name follows the container hostname. Set `hostname` in your
-compose file to control the `.local` name.
+The advertised service name follows the Avahi hostname by default. Set
+`AVAHI_NAME` to control the name shown by service browsers such as Finder
+without changing the host address record.
+
+Set `AVAHI_HOSTNAME` to control the `.local` host name used by Avahi. Do not
+include the `.local` suffix. This changes the host address record, so prefer
+`AVAHI_NAME` when you only need a friendlier service name. If another mDNS stack
+is already running on the host network, competing host address records can cause
+Avahi host name conflicts.
 
 Avahi listens on every interface by default. Set `AVAHI_INTERFACES`, for
 example `eth0`, to avoid advertising on Docker bridge, loopback, or veth

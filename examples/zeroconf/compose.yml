@@ -4,7 +4,6 @@ services:
   samba:
     image: crazymax/samba
     container_name: samba
-    hostname: docker-samba
     network_mode: host
     volumes:
       - "./data:/data"
@@ -16,6 +15,8 @@ services:
       - "TZ=Europe/Paris"
       - "SAMBA_LOG_LEVEL=0"
       - "AVAHI_ENABLE=1"
+      - "AVAHI_NAME=Docker Samba"
+      #- "AVAHI_HOSTNAME=docker-samba"
       # Restrict Avahi to the LAN-facing interface if needed.
       #- "AVAHI_INTERFACES=eth0"
       # Set to a real Time Machine share name to publish _adisk._tcp.

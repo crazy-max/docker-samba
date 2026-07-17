@@ -3,6 +3,8 @@
 
 : "${AVAHI_ENABLE=0}"
 : "${AVAHI_INTERFACES=}"
+: "${AVAHI_NAME=%h}"
+: "${AVAHI_HOSTNAME=}"
 : "${AVAHI_MODEL=RackMac}"
 : "${AVAHI_ADISK_NAME=}"
 
@@ -20,7 +22,13 @@ sed_escape() {
 
 avahiModel=$(xml_escape "${AVAHI_MODEL}")
 avahiAdiskName=$(xml_escape "${AVAHI_ADISK_NAME}")
+avahiName=$(xml_escape "${AVAHI_NAME}")
 avahiInterfaces=$(sed_escape "${AVAHI_INTERFACES}")
+avahiHostname=$(sed_escape "${AVAHI_HOSTNAME}")
+
+if [ -n "${AVAHI_HOSTNAME}" ]; then
+  sed -i "s/^#*host-name=.*/host-name=${avahiHostname}/" /etc/avahi/avahi-daemon.conf
+fi
 
 if [ -n "${AVAHI_INTERFACES}" ]; then
   sed -i "s/^#*allow-interfaces=.*/allow-interfaces=${avahiInterfaces}/" /etc/avahi/avahi-daemon.conf
@@ -31,7 +39,7 @@ cat > /etc/avahi/services/samba.service <<EOL
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
 <service-group>
-  <name replace-wildcards="yes">%h</name>
+  <name replace-wildcards="yes">${avahiName}</name>
   <service>
     <type>_smb._tcp</type>
     <port>445</port>
