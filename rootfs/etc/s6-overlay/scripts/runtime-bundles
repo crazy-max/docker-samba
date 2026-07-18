@@ -1,0 +1,19 @@
+#!/command/with-contenv sh
+
+set -eu
+
+bundle_dir=/etc/s6-overlay/s6-rc.d/user
+contents_dir=${bundle_dir}/contents.d
+
+rm -rf "${contents_dir}"
+mkdir -p "${contents_dir}"
+
+: > "${contents_dir}/smbd"
+
+if [ "${WSDD2_ENABLE:-0}" = "1" ]; then
+  : > "${contents_dir}/wsdd2"
+fi
+
+if [ "${AVAHI_ENABLE:-0}" = "1" ]; then
+  : > "${contents_dir}/avahi"
+fi

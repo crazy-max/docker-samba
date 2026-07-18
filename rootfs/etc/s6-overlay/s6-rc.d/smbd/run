@@ -1,0 +1,3 @@
+#!/command/with-contenv sh
+
+exec s6-notifyoncheck -d -n 0 -T 30000 -t 8000 -w 1000 smbd -F --debug-stdout --no-process-group

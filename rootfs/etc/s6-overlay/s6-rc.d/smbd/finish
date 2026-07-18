@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [ -s /run/s6-linux-init-container-results/exitcode ]; then
+  exit 0
+fi
+
+if [ "$1" -eq 256 ]; then
+  exitcode=$((128 + $2))
+else
+  exitcode=$1
+fi
+
+echo "${exitcode}" > /run/s6-linux-init-container-results/exitcode
+exec /run/s6/basedir/bin/halt
