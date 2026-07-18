@@ -1,10 +1,44 @@
 #!/bin/sh
 
-out="$(smbclient -L \\localhost -U % -m SMB3 2>&1)"
-rc=$?
+set -eu
 
-if printf '%s\n' "$out" | grep -q 'NT_STATUS_ACCESS_DENIED'; then
-  exit 0
-fi
+active="$(s6-rc -a list)"
 
-exit "$rc"
+is_active() {
+  printf '%s\n' "$active" | grep -qx "$1"
+}
+
+check_service() {
+  service="$1"
+  service_dir="/run/service/${service}"
+
+  if ! is_active "$service"; then
+    return 0
+  fi
+
+  state="$(s6-svstat -o up,wantedup "$service_dir")"
+  if [ "$state" != "true true" ]; then
+    echo "ERROR: ${service} is not up and wanted up: ${state}" >&2
+    return 1
+  fi
+
+  if [ -f "${service_dir}/notification-fd" ]; then
+    ready="$(s6-svstat -o ready "$service_dir")"
+    if [ "$ready" != "true" ]; then
+      echo "ERROR: ${service} is not ready: ${ready}" >&2
+      return 1
+    fi
+  fi
+
+  if [ -e "${service_dir}/data/check" ]; then
+    if [ ! -x "${service_dir}/data/check" ]; then
+      echo "ERROR: ${service} check is not executable" >&2
+      return 1
+    fi
+    "${service_dir}/data/check"
+  fi
+}
+
+check_service smbd
+check_service wsdd2
+check_service avahi
