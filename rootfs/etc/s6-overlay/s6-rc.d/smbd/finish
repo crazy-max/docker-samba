@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ -s /run/s6-linux-init-container-results/exitcode ]; then
+if [ "$(s6-svstat -o wantedup /run/service/smbd)" = "false" ]; then
   exit 0
 fi
 
