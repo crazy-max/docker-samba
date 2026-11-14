@@ -5,6 +5,8 @@ services:
     image: ${SAMBA_IMAGE:-crazymax/samba}
     container_name: ${SAMBA_CONTAINER:-samba}
     hostname: docker_samba
+    extra_hosts:
+      - "docker_samba:127.0.0.1"
     network_mode: host
     cap_add:
       - CAP_NET_ADMIN
