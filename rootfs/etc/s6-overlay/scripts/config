@@ -3,6 +3,9 @@
 
 TZ=${TZ:-UTC}
 CONFIG_FILE=${CONFIG_FILE:-/data/config.yml}
+if [[ "$CONFIG_FILE" == "/data/config.yml" && ! -f "$CONFIG_FILE" && -f "/data/config.yaml" ]]; then
+    CONFIG_FILE="/data/config.yaml"
+fi
 
 SAMBA_WORKGROUP=${SAMBA_WORKGROUP:-WORKGROUP}
 SAMBA_SERVER_STRING=${SAMBA_SERVER_STRING:-Docker Samba Server}
