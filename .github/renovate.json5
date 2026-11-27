@@ -1,0 +1,106 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "helpers:pinGitHubActionDigestsToSemver",
+    "helpers:githubDigestChangelogs"
+  ],
+  "enabledManagers": [
+    "github-actions",
+    "dockerfile",
+    "custom.regex"
+  ],
+  "prHourlyLimit": 0,
+  "minimumReleaseAge": "2 days",
+  "internalChecksFilter": "strict",
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "commitMessageSuffix": ""
+  },
+  "labels": ["kind/dependencies", "bot"],
+  "semanticCommits": "disabled",
+  "commitMessagePrefix": "deps{{#if isVulnerabilityAlert}}(security){{/if}}:",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>git-refs) depName=(?<depName>\\S+) ref=(?<currentValue>\\S+)\\r?\\nARG WSDD2_VERSION=(?<currentDigest>[a-f0-9]{40})"
+      ],
+      "packageNameTemplate": "https://github.com/{{depName}}",
+      "versioningTemplate": "exact"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>custom\\.alpine-samba) depName=(?<depName>alpine)\\r?\\nARG ALPINE_VERSION=(?<currentValue>\\d+\\.\\d+)\\r?\\nARG SAMBA_VERSION=(?<currentDigest>\\S+)"
+      ],
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile$/"],
+      "matchStringsStrategy": "recursive",
+      "matchStrings": [
+        "ARG ALPINE_VERSION=(?<alpineVersion>\\d+\\.\\d+)[\\s\\S]*",
+        "ARG SAMBA_VERSION=(?<currentValue>\\S+)"
+      ],
+      "registryUrlTemplate": "https://dl-cdn.alpinelinux.org/alpine?branch=v{{alpineVersion}}&components=main,community&arch=x86_64",
+      "depNameTemplate": "samba",
+      "datasourceTemplate": "apk",
+      "versioningTemplate": "apk"
+    }
+  ],
+  "customDatasources": {
+    "alpine-samba": {
+      "defaultRegistryUrlTemplate": "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/",
+      "format": "plain",
+      "transformTemplates": [
+        "(\
+          $entry := function($pattern) { releases.version.$match($pattern).groups };\
+          $alpine := $entry(/href=\"alpine-release-([0-9]+\\.[0-9]+)\\.[0-9]+-r[0-9]+\\.apk\"[^<]*<\\/a>\\s+([0-9]{2}-[A-Za-z]{3}-[0-9]{4} [0-9]{2}:[0-9]{2})/);\
+          $pkg := $entry(/href=\"samba-([0-9][^\"]+-r[0-9]+)\\.apk\"[^<]*<\\/a>\\s+([0-9]{2}-[A-Za-z]{3}-[0-9]{4} [0-9]{2}:[0-9]{2})/);\
+          $date := function($s) { $toMillis($s, '[D01]-[MNn,3-3]-[Y0001] [H01]:[m01]') };\
+          { 'releases': [$count($alpine) = 2 and $count($pkg) = 2 ? {\
+            'version': $alpine[0], 'digest': $pkg[0],\
+            'releaseTimestamp': $fromMillis($max([$date($alpine[1]), $date($pkg[1])]))\
+          }], 'sourceUrl': 'https://alpinelinux.org/' }\
+        )"
+      ]
+    }
+  },
+  "packageRules": [
+    {
+      // Git refs do not provide a release timestamp.
+      "matchDatasources": ["git-refs"],
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "The custom manager updates Alpine together with its available samba version.",
+      "matchManagers": ["dockerfile"],
+      "matchPackageNames": ["alpine"],
+      "enabled": false
+    },
+    {
+      "description": "The APK manager handles package revisions on the current Alpine branch.",
+      "matchDatasources": ["custom.alpine-samba"],
+      "matchUpdateTypes": ["digest"],
+      "enabled": false
+    },
+    {
+      "matchFileNames": ["Dockerfile"],
+      "commitMessagePrefix": "deps(dockerfile{{#if isVulnerabilityAlert}},security{{/if}}):"
+    },
+    {
+      "matchFileNames": [".github/workflows/**"],
+      "commitMessagePrefix": "deps(ci{{#if isVulnerabilityAlert}},security{{/if}}):"
+    },
+    {
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "commitMessageAction": "bump",
+      "commitMessageTopic": "{{{depName}}}",
+      "commitMessageExtra": "from {{{replace '^v' '' currentValue}}} to {{{replace '^v' '' newValue}}}"
+    }
+  ]
+}

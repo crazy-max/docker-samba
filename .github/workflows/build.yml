@@ -21,7 +21,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       contents: read # same as global permissions
       packages: write # required to push to GHCR
