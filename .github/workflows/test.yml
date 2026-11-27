@@ -62,6 +62,21 @@ jobs:
           SAMBA_IMAGE: ${{ env.BUILD_TAG }}
           SAMBA_CONTAINER: ${{ env.CONTAINER_NAME }}
       -
+        name: Check shutdown and daemon failure
+        run: |
+          docker update --restart=no "${CONTAINER_NAME}"
+          docker exec "${CONTAINER_NAME}" s6-svwait -U -t 30000 /run/service/smbd
+          docker stop --timeout 10 "${CONTAINER_NAME}"
+          test "$(docker inspect --format '{{.State.ExitCode}}' "${CONTAINER_NAME}")" = "0"
+          docker compose up -d --wait --wait-timeout 60
+          docker exec "${CONTAINER_NAME}" s6-svwait -U -t 30000 /run/service/smbd
+          docker exec "${CONTAINER_NAME}" s6-svc -k /run/service/smbd
+          test "$(timeout 30 docker wait "${CONTAINER_NAME}")" = "137"
+        working-directory: test
+        env:
+          SAMBA_IMAGE: ${{ env.BUILD_TAG }}
+          SAMBA_CONTAINER: ${{ env.CONTAINER_NAME }}
+      -
         name: Logs
         if: always()
         run: |
