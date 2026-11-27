@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
 
+# renovate: datasource=custom.alpine-samba depName=alpine
 ARG ALPINE_VERSION=3.24
+ARG SAMBA_VERSION=4.23.8-r0
 
-ARG SAMBA_VERSION=4.23.8
-ARG SAMBA_REVISION=r0
-
+# renovate: datasource=git-refs depName=crazy-max/wsdd2 ref=fix-msghdr
 ARG WSDD2_VERSION=0098d86d2998cff056ec19e734e17bf99d5314ae
 
 FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS wsdd2-src
@@ -21,14 +21,13 @@ RUN make DESTDIR=/dist install
 
 FROM alpine:${ALPINE_VERSION}
 ARG SAMBA_VERSION
-ARG SAMBA_REVISION
 RUN apk --update --no-cache add \
     avahi \
     bash \
     coreutils \
     jq \
     s6-overlay \
-    samba=${SAMBA_VERSION}-${SAMBA_REVISION} \
+    samba=${SAMBA_VERSION} \
     shadow \
     tzdata \
     yq \
